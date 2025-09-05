@@ -6,9 +6,10 @@ import Layout from './components/Layout';
 const LoginPage = () => <div className="p-8"><h1 className="text-3xl font-bold">Login Page (by Aradhya)</h1></div>;
 const RegisterPage = () => <div className="p-8"><h1 className="text-3xl font-bold">Register Page (by Aradhya)</h1></div>;
 const DashboardPage = () => <div className="p-8"><h1 className="text-3xl font-bold">Dashboard (by Purvika)</h1></div>;
-const StudentsPage = () => <div className="p-8"><h1 className="text-3xl font-bold">Students Page (by Aryan)</h1></div>;
 
 // --- Your Pages ---
+// The original placeholder for StudentsPage is now replaced with your actual import
+import StudentsPage from './pages/StudentsPage';
 import DrivesListPage from './pages/DrivesListPage';
 import CompanyDetailPage from './pages/CompanyDetailPage';
 import ManageDrivePage from './pages/ManageDrivePage';
