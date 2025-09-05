@@ -68,7 +68,6 @@ const ManageDrivePage = () => {
                 Bulk Update
             </button>
         </div> 
-        <ArrowLeft></ArrowLeft>
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-x-auto">

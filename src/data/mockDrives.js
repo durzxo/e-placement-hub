@@ -9,6 +9,13 @@ export const mockDrives = [
     driveDate: "2025-09-20",
     status: "Upcoming",
     rounds: ["Online Assessment", "Technical Interview", "HR Interview"],
+    registeredStudents: [
+      { id: 201, rollNumber: "CS101", name: "Rohan Sharma", progress: { "Online Assessment": "Registered", "Technical Interview": "Registered", "HR Interview": "Registered" }, finalStatus: "Pending" },
+      { id: 202, rollNumber: "CS102", name: "Priya Patel", progress: { "Online Assessment": "Cleared", "Technical Interview": "Registered", "HR Interview": "Registered" }, finalStatus: "Pending" },
+      { id: 203, rollNumber: "CS103", name: "Amit Singh", progress: { "Online Assessment": "Registered", "Technical Interview": "Registered", "HR Interview": "Registered" }, finalStatus: "Pending" },
+      { id: 204, rollNumber: "CS104", name: "Sneha Reddy", progress: { "Online Assessment": "Appeared", "Technical Interview": "Registered", "HR Interview": "Registered" }, finalStatus: "Pending" },
+      { id: 205, rollNumber: "CS105", name: "Vikram Kumar", progress: { "Online Assessment": "Registered", "Technical Interview": "Registered", "HR Interview": "Registered" }, finalStatus: "Pending" },
+    ]
   },
   {
     driveId: 2,
@@ -20,6 +27,11 @@ export const mockDrives = [
     driveDate: "2025-09-15",
     status: "In Progress",
     rounds: ["Aptitude Test", "Group Discussion", "Technical Round", "Managerial Round"],
+    registeredStudents: [
+      { id: 201, rollNumber: "CS101", name: "Rohan Sharma", progress: { "Aptitude Test": "Cleared", "Group Discussion": "Cleared", "Technical Round": "Appeared", "Managerial Round": "Registered" }, finalStatus: "Pending" },
+      { id: 202, rollNumber: "CS102", name: "Priya Patel", progress: { "Aptitude Test": "Cleared", "Group Discussion": "Appeared", "Technical Round": "Registered", "Managerial Round": "Registered" }, finalStatus: "Pending" },
+      { id: 203, rollNumber: "CS103", name: "Amit Singh", progress: { "Aptitude Test": "Not Cleared", "Group Discussion": "Registered", "Technical Round": "Registered", "Managerial Round": "Registered" }, finalStatus: "Not Selected" },
+    ]
   },
   {
     driveId: 3,
@@ -31,6 +43,11 @@ export const mockDrives = [
     driveDate: "2025-08-28",
     status: "Completed",
     rounds: ["Coding Challenge", "System Design", "Final Interview"],
+    registeredStudents: [
+      { id: 201, rollNumber: "CS101", name: "Rohan Sharma", progress: { "Coding Challenge": "Cleared", "System Design": "Cleared", "Final Interview": "Cleared" }, finalStatus: "Selected" },
+      { id: 202, rollNumber: "CS102", name: "Priya Patel", progress: { "Coding Challenge": "Cleared", "System Design": "Not Cleared", "Final Interview": "Registered" }, finalStatus: "Not Selected" },
+      { id: 204, rollNumber: "CS104", name: "Sneha Reddy", progress: { "Coding Challenge": "Cleared", "System Design": "Cleared", "Final Interview": "Cleared" }, finalStatus: "Selected" },
+    ]
   }
 ];
 
