@@ -1,8 +1,15 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Users, Briefcase, LogOut } from 'lucide-react';
 
-const Sidebar = () => {
+const Sidebar = ({ onLogout }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    onLogout();
+    navigate('/login');
+  };
+
   const navLinkClasses = ({ isActive }) =>
     `flex items-center px-4 py-3 text-gray-700 rounded-lg transition-colors duration-200 ${
       isActive ? 'bg-teal-100 text-teal-700' : 'hover:bg-gray-100'
@@ -19,14 +26,14 @@ const Sidebar = () => {
         <NavLink to="/students" className={navLinkClasses}><Users className="w-5 h-5 mr-3" />Students</NavLink>
         <NavLink to="/drives" className={navLinkClasses}><Briefcase className="w-5 h-5 mr-3" />Drives</NavLink>
       </nav>
-      <div className="p-4 border-t"><button className="flex items-center w-full px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100"><LogOut className="w-5 h-5 mr-3" />Logout</button></div>
+      <div className="p-4 border-t"><button onClick={handleLogout} className="flex items-center w-full px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100"><LogOut className="w-5 h-5 mr-3" />Logout</button></div>
     </div>
   );
 };
 
-const Layout = ({ children }) => (
+const Layout = ({ children, onLogout }) => (
   <div className="flex h-screen bg-gray-50">
-    <Sidebar />
+    <Sidebar onLogout={onLogout} />
     <main className="flex-1 overflow-y-auto">{children}</main>
   </div>
 );

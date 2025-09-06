@@ -20,6 +20,10 @@ import ManageDrivePage from './pages/ManageDrivePage';
 function App() {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+  };
+  
   return (
     <Router>
       <Routes>
@@ -29,35 +33,35 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/dashboard" element={
           isAuthenticated ? (
-            <Layout>
+            <Layout onLogout={handleLogout}>
               <DashboardPage />
             </Layout>
           ) : (<Navigate to="/login" />)
         }/>
         <Route path="/students" element={
           isAuthenticated ? (
-            <Layout>
+            <Layout onLogout={handleLogout}>
               <StudentsPage />
             </Layout>
           ) : (<Navigate to="/login" />)
         }/>
         <Route path="/drives" element={
           isAuthenticated ? (
-            <Layout>
+            <Layout onLogout={handleLogout}>
               <DrivesListPage />
             </Layout>
           ) : (<Navigate to="/login" />)
         }/>
         <Route path="/company/:companyId" element={
           isAuthenticated ? (
-            <Layout>
+            <Layout onLogout={handleLogout}>
               <CompanyDetailPage />
             </Layout>
           ) : (<Navigate to="/login" />)
         }/>
         <Route path="/drives/manage/:driveId" element={
           isAuthenticated ? (
-            <Layout>
+            <Layout onLogout={handleLogout}>
               <ManageDrivePage />
             </Layout>
           ) : (<Navigate to="/login" />)
