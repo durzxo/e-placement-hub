@@ -1,7 +1,6 @@
 {
   "name": "e-placement-hub",
   "private": true,
-  "proxy": "http://localhost:5000",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

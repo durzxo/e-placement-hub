@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { Eye, EyeOff, Mail, Lock, User, GraduationCap } from 'lucide-react';
 
-const SignUpPage = ({ setIsAuthenticated }) => {
+const SignUpPage = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -21,21 +22,27 @@ const SignUpPage = ({ setIsAuthenticated }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Basic validation
     if (formData.password !== formData.confirmPassword) {
       alert('Passwords do not match!');
       return;
     }
     
-    // Dummy authentication - in real app, create account with backend
-    if (formData.name && formData.email && formData.password) {
-      setIsAuthenticated(true);
-      navigate('/dashboard');
-    } else {
-      alert('Please fill in all fields');
+    try {
+      const { name, email, password } = formData;
+      // We only send the necessary fields to the backend
+      const payload = { name, email, password, role: 'student' }; // Assuming default role is 'student'
+      
+      await axios.post('/api/users/register', payload);
+      
+      alert('Signup successful! Please proceed to log in.');
+      navigate('/login');
+
+    } catch (error) {
+      console.error('Signup Error:', error.response.data);
+      alert(`Signup failed: ${error.response.data.message}`);
     }
   };
 

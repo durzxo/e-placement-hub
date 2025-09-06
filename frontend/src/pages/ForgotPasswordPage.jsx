@@ -1,50 +1,74 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { Mail, ArrowLeft, CheckCircle, GraduationCap } from 'lucide-react';
 
 const ForgotPasswordPage = () => {
-  const [step, setStep] = useState('email'); // 'email', 'otp', 'success'
+  const navigate = useNavigate();
+  const [step, setStep] = useState('email'); // 'email', 'otp'
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
 
-  const handleEmailSubmit = (e) => {
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
-    // Handle email submission logic here
-    console.log('Email submitted:', email);
-    setStep('otp');
+    try {
+      await axios.post('/api/users/forgot-password', { email });
+      alert('If an account with this email exists, an OTP has been sent.');
+      setStep('otp');
+    } catch (error) {
+      console.error('Email submission error:', error.response.data);
+      alert(`Error sending OTP: ${error.response.data.message || 'Please try again.'}`);
+    }
   };
 
   const handleOtpChange = (index, value) => {
-    if (value.length <= 1) {
+    if (value.length <= 1 && /^\d*$/.test(value)) { // Only allow single digits
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
       
-      // Auto-focus next input
       if (value && index < 5) {
-        const nextInput = document.getElementById(`otp-${index + 1}`);
-        if (nextInput) nextInput.focus();
+        document.getElementById(`otp-${index + 1}`)?.focus();
       }
     }
   };
 
-  const handleOtpSubmit = (e) => {
+  const handleOtpSubmit = async (e) => {
     e.preventDefault();
     const otpString = otp.join('');
-    if (otpString.length === 6) {
-      // Handle OTP verification logic here
-      console.log('OTP submitted:', otpString);
-      setStep('success');
-    } else {
-      alert('Please enter all 6 digits');
+    if (otpString.length !== 6) {
+      return alert('Please enter a valid 6-digit OTP');
+    }
+
+    try {
+      const response = await axios.post('/api/users/verify-otp', { email, otp: otpString });
+      alert('OTP Verified! You can now reset your password.');
+      // Navigate to the reset password page and pass the token
+      navigate('/reset-password', { state: { token: response.data.resetToken } });
+    } catch (error) {
+      console.error('OTP verification error:', error.response.data);
+      alert(`Error verifying OTP: ${error.response.data.message || 'Please try again.'}`);
     }
   };
 
-  const resendOtp = () => {
-    // Handle resend OTP logic here
-    console.log('Resending OTP to:', email);
-    setOtp(['', '', '', '', '', '']);
+  const resendOtp = async () => {
+    try {
+      await axios.post('/api/users/forgot-password', { email });
+      alert('A new OTP has been sent.');
+      setOtp(['', '', '', '', '', '']);
+    } catch (error) {
+      alert(`Error resending OTP: ${error.response.data.message || 'Please try again.'}`);
+    }
   };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+      document.getElementById(`otp-${index - 1}`)?.focus();
+    }
+  };
+
+  // Your Success Step JSX was part of the original component. 
+  // The correct flow is to navigate away after OTP success, so we no longer need the 'success' step here.
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 to-blue-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -78,17 +102,6 @@ const ForgotPasswordPage = () => {
               </h2>
               <p className="mt-2 text-center text-sm text-gray-600">
                 We've sent a 6-digit code to <span className="font-medium text-gray-900">{email}</span>
-              </p>
-            </>
-          )}
-          
-          {step === 'success' && (
-            <>
-              <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-                OTP Verified!
-              </h2>
-              <p className="mt-2 text-center text-sm text-gray-600">
-                Your OTP has been verified successfully. You can now reset your password.
               </p>
             </>
           )}
@@ -146,12 +159,7 @@ const ForgotPasswordPage = () => {
                       className="w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                       value={digit}
                       onChange={(e) => handleOtpChange(index, e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Backspace' && !digit && index > 0) {
-                          const prevInput = document.getElementById(`otp-${index - 1}`);
-                          if (prevInput) prevInput.focus();
-                        }
-                      }}
+                      onKeyDown={(e) => handleKeyDown(e, index)}
                     />
                   ))}
                 </div>
@@ -179,26 +187,6 @@ const ForgotPasswordPage = () => {
                 </button>
               </div>
             </form>
-          )}
-
-          {step === 'success' && (
-            <div className="text-center space-y-6">
-              <div className="flex justify-center">
-                <CheckCircle className="h-16 w-16 text-green-500" />
-              </div>
-              <p className="text-gray-600">
-                Your identity has been verified. You can now proceed to reset your password.
-              </p>
-              <button
-                onClick={() => {
-                  // Redirect to reset password page or handle password reset
-                  console.log('Proceeding to password reset');
-                }}
-                className="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
-              >
-                Reset Password
-              </button>
-            </div>
           )}
         </div>
 

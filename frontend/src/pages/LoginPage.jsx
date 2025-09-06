@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { Eye, EyeOff, Mail, Lock, GraduationCap } from 'lucide-react';
 
 const LoginPage = ({ setIsAuthenticated }) => {
@@ -18,14 +19,21 @@ const LoginPage = ({ setIsAuthenticated }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Dummy authentication - in real app, validate with backend
-    if (formData.email && formData.password) {
+    try {
+      const response = await axios.post('/api/users/login', formData);
+      
+      // In a real, production app you would save this token to localStorage
+      // For now, we'll just log it to prove it works
+      console.log('Received token:', response.data.token);
+      
       setIsAuthenticated(true);
       navigate('/dashboard');
-    } else {
-      alert('Please enter both email and password');
+
+    } catch (error) {
+      console.error('Login Error:', error.response.data);
+      alert(`Login failed: ${error.response.data.message}`);
     }
   };
 

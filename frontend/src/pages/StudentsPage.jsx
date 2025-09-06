@@ -1,12 +1,29 @@
-import React, { useState } from 'react';
-import { mockStudents } from '../data/mockStudents';
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import StudentDetailModal from '../components/StudentDetailModal';
 
 const StudentsPage = () => {
-  const [students] = useState(mockStudents);
+  const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const fileInputRef = useRef(null); // Ref for the hidden file input
+
+  // Function to fetch students from the backend
+  const fetchStudents = async () => {
+    try {
+      const response = await axios.get('/api/students');
+      setStudents(response.data);
+    } catch (error) {
+      console.error('Failed to fetch students:', error);
+      alert('Failed to fetch students. Please try again.');
+    }
+  };
+
+  // Fetch students when the component mounts
+  useEffect(() => {
+    fetchStudents();
+  }, []);
 
   const filteredStudents = students.filter(student =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -23,6 +40,38 @@ const StudentsPage = () => {
     setSelectedStudent(null);
   };
 
+  // Function to handle the "Upload" button click
+  const handleUploadClick = () => {
+    fileInputRef.current.click(); // Programmatically click the hidden file input
+  };
+
+  // Function to handle the file selection and upload
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('masterlist', file); // 'masterlist' must match the backend upload.single() name
+
+    try {
+      const response = await axios.post('/api/students/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      alert(response.data.message);
+      fetchStudents(); // Refresh the student list after a successful upload
+    } catch (error) {
+      console.error('File upload failed:', error.response.data);
+      alert(`Upload failed: ${error.response.data.message}`);
+    } finally {
+        // Clear the file input value so the user can upload the same file again if needed
+        event.target.value = null;
+    }
+  };
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
@@ -35,25 +84,32 @@ const StudentsPage = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <button className="bg-teal-600 text-white py-2 px-4 rounded-lg shadow-sm font-semibold hover:bg-teal-700 ml-4">
+          {/* Hidden file input */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+            accept=".xlsx, .xls"
+          />
+          {/* The button the user sees */}
+          <button 
+            onClick={handleUploadClick}
+            className="bg-teal-600 text-white py-2 px-4 rounded-lg shadow-sm font-semibold hover:bg-teal-700 ml-4"
+          >
             Upload Master List
           </button>
         </div>
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
+          {/* Your table JSX is perfect, no changes needed here */}
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roll Number</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Moodle ID</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CGPA</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
+                {/* table headers */}
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredStudents.length > 0 ? (
                 filteredStudents.map((student) => (
-                  <tr key={student.id}>
+                  <tr key={student._id}> {/* Use student._id from MongoDB */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.rollNumber}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{student.name}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.moodleID}</td>
@@ -87,4 +143,4 @@ const StudentsPage = () => {
   );
 };
 
-export default StudentsPage;
+export default StudentsPage; 
