@@ -3,7 +3,7 @@ import { mockStudents } from '../data/mockStudents';
 import StudentDetailModal from '../components/StudentDetailModal';
 
 const StudentsPage = () => {
-  const [students, setStudents] = useState(mockStudents);
+  const [students] = useState(mockStudents);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
