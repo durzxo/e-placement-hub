@@ -1,4 +1,6 @@
 # Logs
+# Minor change for test commit
+# Added by GauravPatil2515
 logs
 *.log
 npm-debug.log*
