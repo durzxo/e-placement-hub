@@ -9,12 +9,10 @@ import SignUpPage from './pages/SignUpPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import RegisterPage from './pages/RegisterPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
-
+import DashboardPage from './pages/DashboardPage';
 
 // --- Dashboard Pages ---
-const DashboardPage = () => <div className="p-8"><h1 className="text-3xl font-bold">Dashboard</h1></div>;
 
-// --- Management Pages ---
 import StudentsPage from './pages/StudentsPage';
 import DrivesListPage from './pages/DrivesListPage';
 import CompanyDetailPage from './pages/CompanyDetailPage';
