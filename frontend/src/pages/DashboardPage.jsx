@@ -1,29 +1,33 @@
-// src/pages/DashboardPage.jsx
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import StatCard from '../components/StatCard';
 import UpcomingDrives from '../components/UpcomingDrives';
-import PlacementDoughnut from "../components/PlacementDoughnut"
-import './DashboardPage.css'; // Import the stylesheet
-
-// Import icons for the stat cards
+import PlacementDoughnut from "../components/PlacementDoughnut";
+import './DashboardPage.css';
 import { FaUsers, FaBuilding, FaUserCheck, FaPercentage } from 'react-icons/fa';
 
 const DashboardPage = () => {
-  // --- SAMPLE DATA ---
-  // In a real app, you would fetch this data from an API
-  const totalStudents = 120;
-  const activeDrives = 3;
-  const totalSelected = 28;
-  const placementRate = ((totalSelected / totalStudents) * 100).toFixed(1);
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const upcomingDrivesData = [
-    { company: 'TCS', date: 'Sept 10, 2025' },
-    { company: 'Infosys', date: 'Sept 15, 2025' },
-    { company: 'Wipro', date: 'Sept 20, 2025' },
-    { company: 'Accenture', date: 'Sept 25, 2025' },
-  ];
-  // --- END SAMPLE DATA ---
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await axios.get('/api/dashboard/stats');
+        setStats(response.data);
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  if (loading || !stats) {
+    return <div className="p-8">Loading Dashboard...</div>;
+  }
 
   return (
     <div className="dashboard-page">
@@ -33,21 +37,21 @@ const DashboardPage = () => {
       </header>
 
       <main>
-        {/* Top row of statistics */}
         <div className="stats-grid">
-          <StatCard icon={<FaUsers />} title="Total Students" value={totalStudents} color="icon-blue" />
-          <StatCard icon={<FaBuilding />} title="Active Drives" value={activeDrives} color="icon-purple" />
-          <StatCard icon={<FaUserCheck />} title="Total Selected" value={totalSelected} color="icon-green" />
-          <StatCard icon={<FaPercentage />} title="Placement Rate" value={`${placementRate}%`} color="icon-orange" />
+          <StatCard icon={<FaUsers />} title="Total Students" value={stats.totalStudents} color="icon-blue" />
+          <StatCard icon={<FaBuilding />} title="Active Drives" value={stats.activeDrives} color="icon-purple" />
+          <StatCard icon={<FaUserCheck />} title="Total Selected" value={stats.totalSelected} color="icon-green" />
+          <StatCard icon={<FaPercentage />} title="Placement Rate" value={`${stats.placementRate}%`} color="icon-orange" />
         </div>
 
-        {/* Bottom row with chart and list */}
         <div className="bottom-grid">
           <div className="doughnut-container">
-            <PlacementDoughnut />
+            {/* Pass the chart data as a prop */}
+            <PlacementDoughnut chartData={stats.placementStatusData} />
           </div>
           <div className="upcoming-drives-container">
-            <UpcomingDrives drives={upcomingDrivesData} />
+            {/* Pass the upcoming drives data as a prop */}
+            <UpcomingDrives drives={stats.upcomingDrives} />
           </div>
         </div>
       </main>

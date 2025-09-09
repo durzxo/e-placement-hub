@@ -5,6 +5,7 @@ const cors = require('cors');
 const studentRoutes = require('./routes/studentRoutes');
 const userRoutes = require('./routes/userRoutes');
 const driveRoutes = require('./routes/driveRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 
 const app = express();
 
@@ -23,6 +24,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api/users', userRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/drives', driveRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 
 app.listen(PORT, () => {
