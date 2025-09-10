@@ -9,7 +9,7 @@ const StudentDetailModal = ({ student, isOpen, onClose }) => {
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50" onClick={onClose}></div>
         <div className="relative bg-white p-8 rounded-xl shadow-lg max-w-4xl w-full mx-4 my-8">
           <button
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-150"
             onClick={onClose}
           >
             <svg
@@ -66,7 +66,7 @@ const StudentDetailModal = ({ student, isOpen, onClose }) => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {student.placementActivity.map((activity, index) => (
-                  <tr key={index}>
+                  <tr key={index} className="hover:bg-gray-50 transition-colors duration-150">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{activity.company}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{activity.date}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{activity.rounds.aptitude}</td>

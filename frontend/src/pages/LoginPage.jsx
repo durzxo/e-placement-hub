@@ -45,7 +45,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
             <div className="flex items-center">
               <GraduationCap className="h-12 w-12 text-teal-600" />
               <div className="ml-3 text-center">
-                <h1 className="text-2xl font-bold text-gray-900">APSIT PLACEMENT</h1>
+                <h1 className="text-2xl font-bold text-gray-900">E-Placement Hub</h1>
                 <p className="text-sm text-gray-600">Computer Department</p>
               </div>
             </div>
@@ -55,7 +55,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{' '}
-            <Link to="/signup" className="font-medium text-teal-600 hover:text-teal-500">
+            <Link to="/signup" className="font-medium text-teal-600 hover:text-teal-500 transition-colors duration-150">
               create a new account
             </Link>
           </p>
@@ -107,7 +107,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                   <button
                     type="button"
-                    className="text-gray-400 hover:text-gray-500 focus:outline-none"
+                    className="text-gray-400 hover:text-gray-500 focus:outline-none transition-colors duration-150"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -134,7 +134,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
               </div>
 
               <div className="text-sm">
-                <Link to="/forgot-password" className="font-medium text-teal-600 hover:text-teal-500">
+                <Link to="/forgot-password" className="font-medium text-teal-600 hover:text-teal-500 transition-colors duration-150">
                   Forgot your password?
                 </Link>
               </div>
@@ -143,7 +143,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
             <div>
               <button
                 type="submit"
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-teal-600 hover:bg-teal-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all duration-200"
               >
                 Sign in
               </button>
@@ -152,7 +152,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
         </div>
 
         <div className="text-center">
-          <Link to="/" className="text-sm text-gray-600 hover:text-gray-900">
+          <Link to="/" className="text-sm text-gray-600 hover:text-gray-900 transition-colors duration-150">
             ← Back to home
           </Link>
         </div>

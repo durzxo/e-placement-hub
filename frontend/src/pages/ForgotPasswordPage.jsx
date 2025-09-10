@@ -78,7 +78,7 @@ const ForgotPasswordPage = () => {
             <div className="flex items-center">
               <GraduationCap className="h-12 w-12 text-teal-600" />
               <div className="ml-3 text-center">
-                <h1 className="text-2xl font-bold text-gray-900">APSIT PLACEMENT</h1>
+                <h1 className="text-2xl font-bold text-gray-900">E-Placement Hub</h1>
                 <p className="text-sm text-gray-600">Computer Department</p>
               </div>
             </div>

@@ -80,7 +80,7 @@ const StudentsPage = () => {
           <input
             type="text"
             placeholder="Search by name or roll number..."
-            className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all duration-200"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -95,7 +95,7 @@ const StudentsPage = () => {
           {/* The button the user sees */}
           <button 
             onClick={handleUploadClick}
-            className="bg-teal-600 text-white py-2 px-4 rounded-lg shadow-sm font-semibold hover:bg-teal-700 ml-4"
+            className="bg-teal-600 text-white py-2 px-4 rounded-lg shadow-sm font-semibold hover:bg-teal-700 hover:shadow-md transition-all duration-200 ml-4"
           >
             Upload Master List
           </button>
@@ -119,14 +119,14 @@ const StudentsPage = () => {
     <tbody className="bg-white divide-y divide-gray-200">
       {filteredStudents.length > 0 ? (
         filteredStudents.map((student) => (
-          <tr key={student._id}> {/* Use student._id from MongoDB */}
+          <tr key={student._id} className="hover:bg-gray-50 transition-colors duration-150"> {/* Use student._id from MongoDB */}
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.rollNumber}</td>
             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{student.name}</td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.moodleID}</td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.cgpa}</td>
             <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
               <button 
-                className="text-teal-600 hover:text-teal-900 font-semibold"
+                className="text-teal-600 hover:text-teal-900 font-semibold transition-colors duration-150"
                 onClick={() => handleViewDetails(student)}
               >
                 View Details

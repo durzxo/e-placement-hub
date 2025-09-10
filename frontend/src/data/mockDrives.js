@@ -8,13 +8,13 @@ export const mockDrives = [
     companyDescription: "A leading provider of innovative tech solutions, specializing in cloud computing and AI.",
     driveDate: "2025-09-20",
     status: "Upcoming",
-    rounds: ["Online Assessment", "Technical Interview", "HR Interview"],
+    rounds: ["Aptitude", "Technical", "HR", "Online Assessment", "Case Study", "Final Interview", "Technical Test", "Managerial Round", "Group Discussion"],
     registeredStudents: [
-      { id: 201, rollNumber: "CS101", name: "Rohan Sharma", progress: { "Online Assessment": "Registered", "Technical Interview": "Registered", "HR Interview": "Registered" }, finalStatus: "Pending" },
-      { id: 202, rollNumber: "CS102", name: "Priya Patel", progress: { "Online Assessment": "Cleared", "Technical Interview": "Registered", "HR Interview": "Registered" }, finalStatus: "Pending" },
-      { id: 203, rollNumber: "CS103", name: "Amit Singh", progress: { "Online Assessment": "Registered", "Technical Interview": "Registered", "HR Interview": "Registered" }, finalStatus: "Pending" },
-      { id: 204, rollNumber: "CS104", name: "Sneha Reddy", progress: { "Online Assessment": "Appeared", "Technical Interview": "Registered", "HR Interview": "Registered" }, finalStatus: "Pending" },
-      { id: 205, rollNumber: "CS105", name: "Vikram Kumar", progress: { "Online Assessment": "Registered", "Technical Interview": "Registered", "HR Interview": "Registered" }, finalStatus: "Pending" },
+      { id: 201, rollNumber: "CS101", name: "Rohan Sharma", progress: { "Aptitude": "Registered", "Technical": "Registered", "HR": "Registered", "Online Assessment": "Registered", "Case Study": "Registered", "Final Interview": "Registered", "Technical Test": "Registered", "Managerial Round": "Registered", "Group Discussion": "Registered" }, finalStatus: "Pending" },
+      { id: 202, rollNumber: "CS102", name: "Priya Patel", progress: { "Aptitude": "Cleared", "Technical": "Registered", "HR": "Registered", "Online Assessment": "Cleared", "Case Study": "Registered", "Final Interview": "Registered", "Technical Test": "Registered", "Managerial Round": "Registered", "Group Discussion": "Registered" }, finalStatus: "Pending" },
+      { id: 203, rollNumber: "CS103", name: "Amit Singh", progress: { "Aptitude": "Registered", "Technical": "Registered", "HR": "Registered", "Online Assessment": "Registered", "Case Study": "Registered", "Final Interview": "Registered", "Technical Test": "Registered", "Managerial Round": "Registered", "Group Discussion": "Registered" }, finalStatus: "Pending" },
+      { id: 204, rollNumber: "CS104", name: "Sneha Reddy", progress: { "Aptitude": "Appeared", "Technical": "Registered", "HR": "Registered", "Online Assessment": "Appeared", "Case Study": "Registered", "Final Interview": "Registered", "Technical Test": "Registered", "Managerial Round": "Registered", "Group Discussion": "Registered" }, finalStatus: "Pending" },
+      { id: 205, rollNumber: "CS105", name: "Vikram Kumar", progress: { "Aptitude": "Registered", "Technical": "Registered", "HR": "Registered", "Online Assessment": "Registered", "Case Study": "Registered", "Final Interview": "Registered", "Technical Test": "Registered", "Managerial Round": "Registered", "Group Discussion": "Registered" }, finalStatus: "Pending" },
     ]
   },
   {
@@ -26,11 +26,11 @@ export const mockDrives = [
     companyDescription: "A global consultancy firm driving digital transformation for Fortune 500 companies.",
     driveDate: "2025-09-15",
     status: "In Progress",
-    rounds: ["Aptitude Test", "Group Discussion", "Technical Round", "Managerial Round"],
+    rounds: ["Aptitude", "Technical", "HR", "Online Assessment", "Case Study", "Final Interview", "Technical Test", "Managerial Round", "Group Discussion"],
     registeredStudents: [
-      { id: 201, rollNumber: "CS101", name: "Rohan Sharma", progress: { "Aptitude Test": "Cleared", "Group Discussion": "Cleared", "Technical Round": "Appeared", "Managerial Round": "Registered" }, finalStatus: "Pending" },
-      { id: 202, rollNumber: "CS102", name: "Priya Patel", progress: { "Aptitude Test": "Cleared", "Group Discussion": "Appeared", "Technical Round": "Registered", "Managerial Round": "Registered" }, finalStatus: "Pending" },
-      { id: 203, rollNumber: "CS103", name: "Amit Singh", progress: { "Aptitude Test": "Not Cleared", "Group Discussion": "Registered", "Technical Round": "Registered", "Managerial Round": "Registered" }, finalStatus: "Not Selected" },
+      { id: 201, rollNumber: "CS101", name: "Rohan Sharma", progress: { "Aptitude": "Cleared", "Technical": "Cleared", "HR": "Registered", "Online Assessment": "Cleared", "Case Study": "Cleared", "Final Interview": "Registered", "Technical Test": "Appeared", "Managerial Round": "Registered", "Group Discussion": "Cleared" }, finalStatus: "Pending" },
+      { id: 202, rollNumber: "CS102", name: "Priya Patel", progress: { "Aptitude": "Cleared", "Technical": "Registered", "HR": "Registered", "Online Assessment": "Cleared", "Case Study": "Appeared", "Final Interview": "Registered", "Technical Test": "Registered", "Managerial Round": "Registered", "Group Discussion": "Appeared" }, finalStatus: "Pending" },
+      { id: 203, rollNumber: "CS103", name: "Amit Singh", progress: { "Aptitude": "Not Cleared", "Technical": "Registered", "HR": "Registered", "Online Assessment": "Not Cleared", "Case Study": "Registered", "Final Interview": "Registered", "Technical Test": "Registered", "Managerial Round": "Registered", "Group Discussion": "Registered" }, finalStatus: "Not Selected" },
     ]
   },
   {
@@ -42,11 +42,11 @@ export const mockDrives = [
     companyDescription: "Pioneers in big data analytics and machine learning services.",
     driveDate: "2025-08-28",
     status: "Completed",
-    rounds: ["Coding Challenge", "System Design", "Final Interview"],
+    rounds: ["Aptitude", "Technical", "HR", "Online Assessment", "Case Study", "Final Interview", "Technical Test", "Managerial Round", "Group Discussion"],
     registeredStudents: [
-      { id: 201, rollNumber: "CS101", name: "Rohan Sharma", progress: { "Coding Challenge": "Cleared", "System Design": "Cleared", "Final Interview": "Cleared" }, finalStatus: "Selected" },
-      { id: 202, rollNumber: "CS102", name: "Priya Patel", progress: { "Coding Challenge": "Cleared", "System Design": "Not Cleared", "Final Interview": "Registered" }, finalStatus: "Not Selected" },
-      { id: 204, rollNumber: "CS104", name: "Sneha Reddy", progress: { "Coding Challenge": "Cleared", "System Design": "Cleared", "Final Interview": "Cleared" }, finalStatus: "Selected" },
+      { id: 201, rollNumber: "CS101", name: "Rohan Sharma", progress: { "Aptitude": "Cleared", "Technical": "Cleared", "HR": "Cleared", "Online Assessment": "Cleared", "Case Study": "Cleared", "Final Interview": "Cleared", "Technical Test": "Cleared", "Managerial Round": "Cleared", "Group Discussion": "Cleared" }, finalStatus: "Selected" },
+      { id: 202, rollNumber: "CS102", name: "Priya Patel", progress: { "Aptitude": "Cleared", "Technical": "Not Cleared", "HR": "Registered", "Online Assessment": "Cleared", "Case Study": "Cleared", "Final Interview": "Registered", "Technical Test": "Not Cleared", "Managerial Round": "Registered", "Group Discussion": "Cleared" }, finalStatus: "Not Selected" },
+      { id: 204, rollNumber: "CS104", name: "Sneha Reddy", progress: { "Aptitude": "Cleared", "Technical": "Cleared", "HR": "Cleared", "Online Assessment": "Cleared", "Case Study": "Cleared", "Final Interview": "Cleared", "Technical Test": "Cleared", "Managerial Round": "Cleared", "Group Discussion": "Cleared" }, finalStatus: "Selected" },
     ]
   }
 ];
