@@ -1,39 +1,61 @@
+// backend/routes/driveRoutes.js (FINAL VERSION)
+
 const express = require('express');
 const router = express.Router();
 const Drive = require('../models/driveModel');
 const Student = require('../models/studentModel');
+const axios = require('axios'); // For calling the ML service
 
 // @route   POST /api/drives
 // @desc    Create a new placement drive
 router.post('/', async (req, res) => {
-  try {
-    const newDrive = new Drive({
-      companyName: req.body.companyName,
-      driveDate: req.body.driveDate,
-      applicationDeadline: req.body.applicationDeadline,
-      jobTitle: req.body.jobTitle,
-      jobDescription: req.body.jobDescription,
-      salary: req.body.salary,
-      jobLocation: req.body.jobLocation,
-      minCGPA: req.body.minCGPA,
-      eligibilityCriteria: req.body.eligibilityCriteria,
-      status: req.body.status,
-    });
+    try {
+        const newDrive = new Drive({
+            companyName: req.body.companyName,
+            driveDate: req.body.driveDate,
+            applicationDeadline: req.body.applicationDeadline,
+            jobTitle: req.body.jobTitle,
+            jobDescription: req.body.jobDescription,
+            salary: req.body.salary,
+            jobLocation: req.body.jobLocation,
+            minCGPA: req.body.minCGPA,
+            eligibilityCriteria: req.body.eligibilityCriteria,
+            status: req.body.status,
+        });
 
-    const drive = await newDrive.save();
-    res.status(201).json(drive);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Server Error');
-  }
+        const drive = await newDrive.save();
+        res.status(201).json(drive);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server Error');
+    }
 });
 
 // @route   GET /api/drives
-// @desc    Get all placement drives
+// @desc    Get all placement drives WITH student count (MODIFIED)
 router.get('/', async (req, res) => {
     try {
+        // 1. Find all drives
         const drives = await Drive.find().sort({ driveDate: -1 });
-        res.json(drives);
+
+        // 2. Create an array of promises to count applicants for each drive
+        const drivesWithCountPromises = drives.map(async (drive) => {
+            // Count students where the company name is in their placement activity
+            const applicantCount = await Student.countDocuments({
+                'placementActivity.company': drive.companyName
+            });
+            
+            // Return a new object combining drive data and the count
+            return {
+                ...drive.toObject(), // Convert mongoose document to plain JS object
+                applicantCount: applicantCount
+            };
+        });
+
+        // 3. Resolve all promises concurrently
+        const drivesWithCount = await Promise.all(drivesWithCountPromises);
+        
+        res.json(drivesWithCount);
     } catch (error) {
         console.error(error.message);
         res.status(500).send('Server Error');
@@ -108,6 +130,55 @@ router.put('/:driveId/applicants/:studentId', async (req, res) => {
     } catch (error) {
         console.error(error.message);
         res.status(500).send('Server Error');
+    }
+});
+
+
+// @route   POST /api/drives/predict
+// @desc    Predict placement probability for a student in a drive (Calls Python ML Service)
+router.post('/predict', async (req, res) => {
+    const { studentId, driveId } = req.body;
+    
+    try {
+        // 1. Fetch necessary data from MongoDB
+        const student = await Student.findById(studentId);
+        const drive = await Drive.findById(driveId);
+        
+        if (!student || !drive) {
+            return res.status(404).json({ message: 'Student or Drive not found' });
+        }
+        
+        // Count rounds cleared across all activities (Simplified logic for the ML demo)
+        const totalRoundsCleared = student.placementActivity.reduce((count, activity) => {
+            let clearedInActivity = 0;
+            // Count rounds with 'Cleared' status
+            for (const key in activity.rounds) {
+                if (activity.rounds[key] === 'Cleared') {
+                    clearedInActivity++;
+                }
+            }
+            return count + clearedInActivity;
+        }, 0);
+
+        // 2. Prepare the payload with simplified features for the Python service
+        const mlPayload = {
+            student_cgpa: student.cgpa,
+            student_rounds_cleared: totalRoundsCleared, 
+            drive_min_cgpa: drive.minCGPA 
+        };
+
+        // 3. Call the Python ML Microservice (running on port 8000)
+        const mlResponse = await axios.post('http://localhost:8000/predict', mlPayload);
+        
+        // 4. Return the prediction score/data from the Python service
+        res.json(mlResponse.data);
+
+    } catch (error) {
+        console.error('Prediction Error:', error.message);
+        res.status(503).json({ 
+            message: 'ML Service Unavailable or Prediction Failed',
+            detail: error.code === 'ECONNREFUSED' ? 'Could not connect to Python service on port 8000.' : error.message
+        });
     }
 });
 

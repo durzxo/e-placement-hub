@@ -1,3 +1,5 @@
+// index.js (CLEANED)
+
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -13,7 +15,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = process.env.PORT || 5000;
+// NOTE: I removed the duplicate 'app.use('/api/drives', driveRoutes);' from here.
+
+const PORT = process.env.PORT || 5000; // Uses port 5000 from .env
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
@@ -23,7 +27,7 @@ mongoose.connect(process.env.MONGO_URI)
 // API Routes
 app.use('/api/users', userRoutes);
 app.use('/api/students', studentRoutes);
-app.use('/api/drives', driveRoutes);
+app.use('/api/drives', driveRoutes); // This is the correct and necessary call
 app.use('/api/dashboard', dashboardRoutes);
 
 
