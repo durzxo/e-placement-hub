@@ -31,23 +31,37 @@ const HomePage = () => {
               Streamline your placement process with our comprehensive portal designed specifically 
               for the Computer Department. Connect students with opportunities and manage recruitment drives efficiently.
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Link 
-                to="/login?role=student" 
-                className="group inline-flex items-center bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold px-12 py-6 rounded-xl text-xl hover:from-blue-700 hover:to-blue-800 hover:shadow-2xl transition-all duration-300 shadow-lg transform hover:scale-105 hover:-translate-y-1"
-              >
-                <span className="mr-3">👨‍🎓</span>
-                Login as Student
-                <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />
-              </Link>
-              <Link 
-                to="/login?role=admin" 
-                className="group inline-flex items-center bg-gradient-to-r from-teal-600 to-teal-700 text-white font-semibold px-12 py-6 rounded-xl text-xl hover:from-teal-700 hover:to-teal-800 hover:shadow-2xl transition-all duration-300 shadow-lg transform hover:scale-105 hover:-translate-y-1"
-              >
-                <span className="mr-3">👨‍💼</span>
-                Login as Admin
-                <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />
-              </Link>
+            <div className="flex flex-col gap-8 justify-center items-center">
+              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                <Link 
+                  to="/login?role=student" 
+                  className="group inline-flex items-center bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold px-12 py-6 rounded-xl text-xl hover:from-blue-700 hover:to-blue-800 hover:shadow-2xl transition-all duration-300 shadow-lg transform hover:scale-105 hover:-translate-y-1"
+                >
+                  <span className="mr-3">👨‍🎓</span>
+                  Login as Student
+                  <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />
+                </Link>
+                <Link 
+                  to="/login?role=admin" 
+                  className="group inline-flex items-center bg-gradient-to-r from-teal-600 to-teal-700 text-white font-semibold px-12 py-6 rounded-xl text-xl hover:from-teal-700 hover:to-teal-800 hover:shadow-2xl transition-all duration-300 shadow-lg transform hover:scale-105 hover:-translate-y-1"
+                >
+                  <span className="mr-3">👨‍💼</span>
+                  Login as Admin
+                  <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />
+                </Link>
+              </div>
+              
+              <div className="text-center">
+                <p className="text-gray-600 mb-4">Don't have an account?</p>
+                <Link 
+                  to="/signup" 
+                  className="group inline-flex items-center border-2 border-gray-400 text-gray-700 font-semibold px-10 py-4 rounded-xl text-lg hover:border-teal-600 hover:text-teal-600 hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                >
+                  <span className="mr-3">📝</span>
+                  Create Account
+                  <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                </Link>
+              </div>
             </div>
           </div>
         </div>
