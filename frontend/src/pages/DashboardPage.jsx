@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import StatCard from '../components/StatCard';
 import UpcomingDrives from '../components/UpcomingDrives';
@@ -10,6 +11,7 @@ import { FaUsers, FaBuilding, FaUserCheck, FaPercentage } from 'react-icons/fa';
 const DashboardPage = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const userRole = localStorage.getItem('userRole') || 'student';
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -85,8 +87,10 @@ const DashboardPage = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        <h1>Placement Dashboard</h1>
-        <p>Quick insights into placement activities.</p>
+        <h1>{userRole === 'student' ? 'Student Dashboard' : 'Placement Dashboard'}</h1>
+        <p>{userRole === 'student' 
+          ? 'Your placement status and upcoming opportunities.' 
+          : 'Quick insights into placement activities.'}</p>
       </motion.header>
 
       <motion.main

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { Eye, EyeOff, Mail, Lock, GraduationCap } from 'lucide-react';
 
 const LoginPage = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const role = searchParams.get('role') || 'student';
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -24,16 +26,26 @@ const LoginPage = ({ setIsAuthenticated }) => {
     try {
       const response = await axios.post('/api/users/login', formData);
       
-      // In a real, production app you would save this token to localStorage
-      // For now, we'll just log it to prove it works
+      // Save token and user role to localStorage
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userRole', role);
+      localStorage.setItem('userEmail', formData.email);
+      
       console.log('Received token:', response.data.token);
+      console.log('User role:', role);
       
       setIsAuthenticated(true);
-      navigate('/dashboard');
+      
+      // Redirect based on role
+      if (role === 'student') {
+        navigate('/dashboard'); // Student sees only dashboard
+      } else {
+        navigate('/dashboard'); // Admin sees full website functionality
+      }
 
     } catch (error) {
-      console.error('Login Error:', error.response.data);
-      alert(`Login failed: ${error.response.data.message}`);
+      console.error('Login Error:', error.response?.data || error.message);
+      alert(`Login failed: ${error.response?.data?.message || 'Login error occurred'}`);
     }
   };
 
@@ -51,13 +63,10 @@ const LoginPage = ({ setIsAuthenticated }) => {
             </div>
           </Link>
           <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-            Sign in to your account
+            {role === 'student' ? '👨‍🎓 Student Login' : '👨‍💼 Admin Login'}
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link to="/signup" className="font-medium text-teal-600 hover:text-teal-500 transition-colors duration-150">
-              create a new account
-            </Link>
+            Signing in as {role === 'student' ? 'Student' : 'Administrator'}
           </p>
         </div>
         

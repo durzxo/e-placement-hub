@@ -9,26 +9,12 @@ const HomePage = () => {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
-            <div className="flex items-center ml-4">
+            <div className="flex items-center">
               <GraduationCap className="h-8 w-8 text-teal-600 hover:rotate-12 transition-transform duration-300" />
               <div className="ml-3">
                 <h1 className="text-2xl font-bold text-gray-900">E-Placement Hub</h1>
-                <p className="text-sm text-gray-600">Computer Department</p>
+                <p className="text-sm text-gray-600">APSIT Computer Department</p>
               </div>
-            </div>
-            <div className="flex space-x-4 mr-4">
-              <Link 
-                to="/login" 
-                className="text-teal-600 hover:text-teal-800 font-medium px-4 py-2 rounded-lg transition-colors duration-150"
-              >
-                Login
-              </Link>
-              <Link 
-                to="/signup" 
-                className="bg-teal-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-teal-700 hover:shadow-md transition-all duration-200"
-              >
-                Sign Up
-              </Link>
             </div>
           </div>
         </div>
@@ -47,17 +33,20 @@ const HomePage = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <Link 
-                to="/login" 
-                className="inline-flex items-center bg-teal-600 text-white font-semibold px-10 py-5 rounded-lg text-xl hover:bg-teal-700 hover:shadow-lg transition-all duration-200 shadow-lg transform hover:scale-105"
+                to="/login?role=student" 
+                className="group inline-flex items-center bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold px-12 py-6 rounded-xl text-xl hover:from-blue-700 hover:to-blue-800 hover:shadow-2xl transition-all duration-300 shadow-lg transform hover:scale-105 hover:-translate-y-1"
               >
-                Get Started
-                <ArrowRight className="ml-3 h-6 w-6" />
+                <span className="mr-3">👨‍🎓</span>
+                Login as Student
+                <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
               <Link 
-                to="/signup" 
-                className="inline-flex items-center border-2 border-teal-600 text-teal-600 font-semibold px-10 py-5 rounded-lg text-xl hover:bg-teal-600 hover:text-white hover:shadow-lg transition-all duration-200 transform hover:scale-105"
+                to="/login?role=admin" 
+                className="group inline-flex items-center bg-gradient-to-r from-teal-600 to-teal-700 text-white font-semibold px-12 py-6 rounded-xl text-xl hover:from-teal-700 hover:to-teal-800 hover:shadow-2xl transition-all duration-300 shadow-lg transform hover:scale-105 hover:-translate-y-1"
               >
-                Create Account
+                <span className="mr-3">👨‍💼</span>
+                Login as Admin
+                <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
           </div>

@@ -1,12 +1,16 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Briefcase, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, Briefcase, LogOut, Bell } from 'lucide-react';
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 
 const Sidebar = ({ onLogout }) => {
   const navigate = useNavigate();
+  const userRole = localStorage.getItem('userRole') || 'student';
 
   const handleLogout = () => {
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userEmail');
     onLogout();
     navigate('/login');
   };
@@ -33,6 +37,9 @@ const Sidebar = ({ onLogout }) => {
           E-Placement Portal
         </motion.h1>
         <p className="text-sm text-gray-500">CS Department</p>
+        <div className="mt-2 px-2 py-1 bg-teal-100 rounded-full text-xs text-teal-700 inline-block">
+          {userRole === 'student' ? '👨‍🎓 Student' : '👨‍💼 Admin'}
+        </div>
       </div>
       <nav className="flex-1 p-4 space-y-2">
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -41,16 +48,26 @@ const Sidebar = ({ onLogout }) => {
             Dashboard
           </NavLink>
         </motion.div>
+        {userRole === 'admin' && (
+          <>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <NavLink to="/students" className={navLinkClasses}>
+                <Users className="w-5 h-5 mr-3" />
+                Students
+              </NavLink>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <NavLink to="/drives" className={navLinkClasses}>
+                <Briefcase className="w-5 h-5 mr-3" />
+                Drives
+              </NavLink>
+            </motion.div>
+          </>
+        )}
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <NavLink to="/students" className={navLinkClasses}>
-            <Users className="w-5 h-5 mr-3" />
-            Students
-          </NavLink>
-        </motion.div>
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <NavLink to="/drives" className={navLinkClasses}>
-            <Briefcase className="w-5 h-5 mr-3" />
-            Drives
+          <NavLink to="/notices" className={navLinkClasses}>
+            <Bell className="w-5 h-5 mr-3" />
+            Notices
           </NavLink>
         </motion.div>
       </nav>

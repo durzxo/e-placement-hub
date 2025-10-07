@@ -10,6 +10,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import RegisterPage from './pages/RegisterPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import DashboardPage from './pages/DashboardPage';
+import NoticesPage from './pages/NoticesPage';
 
 // --- Dashboard Pages ---
 
@@ -46,6 +47,9 @@ function App() {
 
         <Route path="/dashboard" element={
           isAuthenticated ? ( <Layout onLogout={handleLogout}><DashboardPage /></Layout> ) : (<Navigate to="/login" />)
+        }/>
+        <Route path="/notices" element={
+          isAuthenticated ? ( <Layout onLogout={handleLogout}><NoticesPage /></Layout> ) : (<Navigate to="/login" />)
         }/>
         <Route path="/students" element={
           isAuthenticated ? ( <Layout onLogout={handleLogout}><StudentsPage /></Layout> ) : (<Navigate to="/login" />)
