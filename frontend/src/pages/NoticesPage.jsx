@@ -56,7 +56,7 @@ const NoticesPage = () => {
         content: "Special session on latest AI/ML industry trends and career opportunities. Guest speaker from Google will share insights.",
         date: "2025-10-12",
         time: "3:30 PM",
-        author: "CS Department",
+        author: "COMPUTER DEPARTMENT",
         priority: "low",
         category: "session"
       }

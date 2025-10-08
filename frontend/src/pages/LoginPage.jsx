@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { Eye, EyeOff, Mail, Lock, GraduationCap } from 'lucide-react';
 
-const LoginPage = ({ setIsAuthenticated }) => {
+const LoginPage = ({ setIsAuthenticated, setUserRole }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const role = searchParams.get('role') || 'student';
@@ -35,6 +35,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
       console.log('User role:', role);
       
       setIsAuthenticated(true);
+      setUserRole(role);
       
       // Redirect based on role
       if (role === 'student') {
@@ -58,12 +59,12 @@ const LoginPage = ({ setIsAuthenticated }) => {
               <GraduationCap className="h-12 w-12 text-teal-600" />
               <div className="ml-3 text-center">
                 <h1 className="text-2xl font-bold text-gray-900">E-Placement Hub</h1>
-                <p className="text-sm text-gray-600">Computer Department</p>
+                <p className="text-sm text-gray-600">COMPUTER DEPARTMENT</p>
               </div>
             </div>
           </Link>
           <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-            {role === 'student' ? '👨‍🎓 Student Login' : '👨‍💼 Admin Login'}
+            {role === 'student' ? 'Student Login' : 'Admin Login'}
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Signing in as {role === 'student' ? 'Student' : 'Administrator'}
@@ -113,10 +114,10 @@ const LoginPage = ({ setIsAuthenticated }) => {
                   value={formData.password}
                   onChange={handleInputChange}
                 />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center z-20">
                   <button
                     type="button"
-                    className="text-gray-400 hover:text-gray-500 focus:outline-none transition-colors duration-150"
+                    className="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-600 transition-colors duration-150"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (

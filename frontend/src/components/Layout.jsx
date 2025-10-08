@@ -4,15 +4,13 @@ import { LayoutDashboard, Users, Briefcase, LogOut, Bell } from 'lucide-react';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 
-const Sidebar = ({ onLogout }) => {
+const Sidebar = ({ onLogout, userRole }) => {
   const navigate = useNavigate();
-  const userRole = localStorage.getItem('userRole') || 'student';
 
   const handleLogout = () => {
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('userEmail');
-    onLogout();
-    navigate('/login');
+    // Call onLogout and get the role that was stored
+    const role = onLogout();
+    navigate(`/login?role=${role}`);
   };
 
   const navLinkClasses = ({ isActive }) =>
@@ -36,9 +34,9 @@ const Sidebar = ({ onLogout }) => {
         >
           E-Placement Portal
         </motion.h1>
-        <p className="text-sm text-gray-500">CS Department</p>
+        <p className="text-sm text-gray-500">COMPUTER DEPARTMENT</p>
         <div className="mt-2 px-2 py-1 bg-teal-100 rounded-full text-xs text-teal-700 inline-block">
-          {userRole === 'student' ? '👨‍🎓 Student' : '👨‍💼 Admin'}
+          {userRole === 'student' ? 'Student' : 'Admin'}
         </div>
       </div>
       <nav className="flex-1 p-4 space-y-2">
@@ -86,9 +84,9 @@ const Sidebar = ({ onLogout }) => {
   );
 };
 
-const Layout = ({ children, onLogout }) => (
+const Layout = ({ children, onLogout, userRole }) => (
   <div className="flex h-screen bg-gray-50">
-    <Sidebar onLogout={onLogout} />
+    <Sidebar onLogout={onLogout} userRole={userRole} />
     <motion.main 
       className="flex-1 overflow-y-auto"
       initial={{ opacity: 0, y: 20 }}

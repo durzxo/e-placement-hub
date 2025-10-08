@@ -200,7 +200,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - A. P. Shah Institute of Technology (APSIT)
-- Computer Department Faculty and Students
+- COMPUTER DEPARTMENT Faculty and Students
 - React and Node.js communities
 
 ---
