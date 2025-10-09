@@ -42,12 +42,11 @@ router.post('/', async (req, res) => {
 // @desc    Delete a notice
 router.delete('/:id', async (req, res) => {
     try {
-        const notice = await Notice.findById(req.params.id);
+        const notice = await Notice.findByIdAndDelete(req.params.id);
         if (!notice) {
             return res.status(404).json({ message: 'Notice not found' });
         }
-        await notice.remove();
-        res.json({ message: 'Notice removed' });
+        res.json({ message: 'Notice removed successfully' });
     } catch (error) {
         console.error('Error deleting notice:', error);
         res.status(500).send('Server Error');

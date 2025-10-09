@@ -74,6 +74,25 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+// @route   DELETE /api/drives/:id
+// @desc    Delete a drive
+router.delete('/:id', async (req, res) => {
+    try {
+        const drive = await Drive.findById(req.params.id);
+        if (!drive) {
+            return res.status(404).json({ message: 'Drive not found' });
+        }
+
+        // Remove the drive using findByIdAndDelete
+        await Drive.findByIdAndDelete(req.params.id);
+
+        res.json({ message: 'Drive removed successfully' });
+    } catch (error) {
+        console.error('Error deleting drive:', error);
+        res.status(500).json({ message: 'Failed to delete drive', error: error.message });
+    }
+});
+
 // @route   GET /api/drives/:id/applicants
 // @desc    Get all students who have applied to a specific drive
 router.get('/:id/applicants', async (req, res) => {

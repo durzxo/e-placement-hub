@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import AddDriveModal from '../components/AddDriveModal';
-import { Briefcase, PlusCircle, Users } from 'lucide-react'; // Added Users icon for count
+import { Briefcase, PlusCircle, Users, Trash2, AlertCircle } from 'lucide-react';
 
 // Helper function to map status to Tailwind classes for the dot and pill
 const getStatusClasses = (status) => {
@@ -38,6 +38,27 @@ const getStatusClasses = (status) => {
 const DrivesListPage = () => {
     const [drives, setDrives] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleDelete = async (driveId, companyName, e) => {
+        e.preventDefault(); // Prevent the Link click
+        e.stopPropagation(); // Prevent event bubbling
+
+        if (window.confirm(`Are you sure you want to delete the drive for ${companyName}? This action cannot be undone.`)) {
+            setIsDeleting(true);
+            try {
+                const response = await axios.delete(`/api/drives/${driveId}`);
+                alert(response.data.message); // Show success message
+                fetchDrives(); // Refresh the list
+            } catch (error) {
+                console.error('Failed to delete drive:', error);
+                const errorMessage = error.response?.data?.message || error.response?.data || 'Failed to delete drive';
+                alert(errorMessage);
+            } finally {
+                setIsDeleting(false);
+            }
+        }
+    };
 
     const fetchDrives = async () => {
         try {
@@ -124,6 +145,7 @@ const DrivesListPage = () => {
                                         boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
                                     }}
                                     transition={{ type: "spring", stiffness: 300 }}
+                                    className="relative" // Added for absolute positioning of delete button
                                 >
                                     <Link to={`/drives/details/${drive._id}`}>
                                         <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md border border-gray-200 hover:border-teal-500 transition-all duration-300 h-full flex flex-col justify-between">
@@ -180,6 +202,16 @@ const DrivesListPage = () => {
                                                 </motion.span>
                                             </div>
 
+                                            {/* Delete Button */}
+                                            <motion.button
+                                                onClick={(e) => handleDelete(drive._id, drive.companyName, e)}
+                                                className="absolute top-4 right-4 p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors duration-200"
+                                                whileHover={{ scale: 1.1 }}
+                                                whileTap={{ scale: 0.9 }}
+                                                disabled={isDeleting}
+                                            >
+                                                <Trash2 className="w-5 h-5" />
+                                            </motion.button>
                                         </div>
                                     </Link>
                                 </motion.div>

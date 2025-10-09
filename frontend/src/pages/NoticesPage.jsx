@@ -1,14 +1,35 @@
 import React, { useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
-import { Bell, Calendar, User, Clock } from 'lucide-react';
+import { Bell, Calendar, User, Clock, Trash2 } from 'lucide-react';
 import axios from 'axios';
 import AddNoticeModal from '../components/AddNoticeModal';
 
 const NoticesPage = () => {
   const [notices, setNotices] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const userRole = localStorage.getItem('userRole') || 'student';
+
+  const handleDelete = async (noticeId, title, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (window.confirm(`Are you sure you want to delete the notice "${title}"? This action cannot be undone.`)) {
+      setIsDeleting(true);
+      try {
+        const response = await axios.delete(`/api/notices/${noticeId}`);
+        alert(response.data.message);
+        fetchNotices(); // Refresh the list
+      } catch (error) {
+        console.error('Failed to delete notice:', error);
+        const errorMessage = error.response?.data?.message || error.response?.data || 'Failed to delete notice';
+        alert(errorMessage);
+      } finally {
+        setIsDeleting(false);
+      }
+    }
+  };
 
   const fetchNotices = async () => {
     try {
@@ -178,7 +199,7 @@ const NoticesPage = () => {
           <motion.div
             key={notice._id}
             variants={itemVariants}
-            className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-200"
+            className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-200 relative"
             whileHover={{ scale: 1.02 }}
           >
             <div className="p-6">
@@ -186,7 +207,7 @@ const NoticesPage = () => {
                 <div className="flex items-center">
                   <span className="text-2xl mr-3">{getCategoryIcon(notice.category)}</span>
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-1">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-1 pr-8">
                       {notice.title}
                     </h3>
                     <div className="flex items-center space-x-4 text-sm text-gray-500">
@@ -205,9 +226,22 @@ const NoticesPage = () => {
                     </div>
                   </div>
                 </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getPriorityColor(notice.priority)}`}>
-                  {notice.priority.toUpperCase()}
-                </span>
+                <div className="flex items-center space-x-2">
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getPriorityColor(notice.priority)}`}>
+                    {notice.priority.toUpperCase()}
+                  </span>
+                  {userRole === 'admin' && (
+                    <motion.button
+                      onClick={(e) => handleDelete(notice._id, notice.title, e)}
+                      className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors duration-200"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      disabled={isDeleting}
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </motion.button>
+                  )}
+                </div>
               </div>
               
               <p className="text-gray-700 leading-relaxed">
