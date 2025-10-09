@@ -8,9 +8,8 @@ const Sidebar = ({ onLogout, userRole }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Call onLogout and get the role that was stored
-    const role = onLogout();
-    navigate(`/login?role=${role}`);
+    onLogout();
+    navigate('/login');
   };
 
   const navLinkClasses = ({ isActive }) =>
@@ -36,7 +35,7 @@ const Sidebar = ({ onLogout, userRole }) => {
         </motion.h1>
         <p className="text-sm text-gray-500">COMPUTER DEPARTMENT</p>
         <div className="mt-2 px-2 py-1 bg-teal-100 rounded-full text-xs text-teal-700 inline-block">
-          {userRole === 'student' ? 'Student' : 'Admin'}
+          {userRole === 'student' ? 'Student' : userRole === 'admin' ? 'Admin' : userRole}
         </div>
       </div>
       <nav className="flex-1 p-4 space-y-2">

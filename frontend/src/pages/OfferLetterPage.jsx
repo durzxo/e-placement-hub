@@ -9,7 +9,20 @@ const OfferLetterPage = () => {
   const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [uploadedLetter, setUploadedLetter] = useState(null);
 
+  // Fetch offer letter for this student
+  React.useEffect(() => {
+    if (moodleId) {
+      axios.get(`/api/offer-letter/student/${moodleId}`)
+        .then(res => {
+          setUploadedLetter(res.data);
+        })
+        .catch(() => {
+          setUploadedLetter(null);
+        });
+    }
+  }, [moodleId, success]);
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
     setError('');
@@ -46,6 +59,10 @@ const OfferLetterPage = () => {
       setFullName('');
       setMoodleId('');
       setCompanyName('');
+      // Fetch the uploaded letter after upload
+      axios.get(`/api/offer-letter/student/${moodleId}`)
+        .then(res => setUploadedLetter(res.data))
+        .catch(() => setUploadedLetter(null));
     } catch (err) {
       setError('Upload failed. Please try again.');
     } finally {
@@ -98,6 +115,20 @@ const OfferLetterPage = () => {
           {uploading ? 'Uploading...' : 'Upload Offer Letter'}
         </button>
       </form>
+      {/* Show uploaded offer letter if exists */}
+      {uploadedLetter && uploadedLetter.fileUrl && (
+        <div className="mt-6 p-4 border rounded-lg bg-teal-50">
+          <h3 className="text-lg font-semibold text-teal-700 mb-2">Your Uploaded Offer Letter:</h3>
+          <a
+            href={uploadedLetter.fileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-teal-600 underline"
+          >
+            View Offer Letter
+          </a>
+        </div>
+      )}
     </div>
   );
 };

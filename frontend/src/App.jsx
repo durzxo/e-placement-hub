@@ -25,26 +25,27 @@ import AdminDashboardPage from './pages/AdminDashboardPage';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
-  const [userRole, setUserRole] = React.useState('student');
-  
+  const [userRole, setUserRole] = React.useState(null);
+
   React.useEffect(() => {
     const token = localStorage.getItem('token');
-    const role = localStorage.getItem('userRole') || 'student';
     if (token) {
       setIsAuthenticated(true);
+      // Extract role from localStorage if present, else null
+      const role = localStorage.getItem('userRole');
       setUserRole(role);
+    } else {
+      setIsAuthenticated(false);
+      setUserRole(null);
     }
   }, []);
 
   const handleLogout = () => {
-    const currentRole = localStorage.getItem('userRole') || 'student';
     localStorage.removeItem('token');
     localStorage.removeItem('userRole');
     localStorage.removeItem('userEmail');
     setIsAuthenticated(false);
-    setUserRole('student');
-    // Return the role so Layout can use it for navigation
-    return currentRole;
+    setUserRole(null);
   };
   
   return (
@@ -58,27 +59,60 @@ function App() {
         <Route path="/reset-password" element={<ResetPasswordPage />} />
 
         <Route path="/dashboard" element={
-          isAuthenticated ? ( <Layout onLogout={handleLogout}><DashboardPage /></Layout> ) : (<Navigate to="/login" />)
+          isAuthenticated ? (
+            <Layout onLogout={handleLogout} userRole={userRole}>
+              <DashboardPage />
+            </Layout>
+          ) : (<Navigate to="/login" />)
+        }/>
+        <Route path="/offer-letter" element={
+          isAuthenticated && userRole === 'student' ? (
+            <Layout onLogout={handleLogout} userRole={userRole}>
+              <OfferLetterPage />
+            </Layout>
+          ) : (<Navigate to="/login" />)
         }/>
         <Route path="/notices" element={
-          isAuthenticated ? ( <Layout onLogout={handleLogout} userRole={userRole}><NoticesPage /></Layout> ) : (<Navigate to="/login" />)
+          isAuthenticated ? (
+            <Layout onLogout={handleLogout} userRole={userRole}>
+              <NoticesPage />
+            </Layout>
+          ) : (<Navigate to="/login" />)
         }/>
         <Route path="/students" element={
-          isAuthenticated ? ( <Layout onLogout={handleLogout}><StudentsPage /></Layout> ) : (<Navigate to="/login" />)
+          isAuthenticated ? (
+            <Layout onLogout={handleLogout} userRole={userRole}>
+              <StudentsPage />
+            </Layout>
+          ) : (<Navigate to="/login" />)
         }/>
         <Route path="/drives" element={
-          isAuthenticated ? ( <Layout onLogout={handleLogout}><DrivesListPage /></Layout> ) : (<Navigate to="/login" />)
+          isAuthenticated ? (
+            <Layout onLogout={handleLogout} userRole={userRole}>
+              <DrivesListPage />
+            </Layout>
+          ) : (<Navigate to="/login" />)
         }/>
         <Route path="/company/:companyId" element={
-          isAuthenticated ? ( <Layout onLogout={handleLogout} userRole={userRole}><CompanyDetailPage /></Layout> ) : (<Navigate to="/login" />)
+          isAuthenticated ? (
+            <Layout onLogout={handleLogout} userRole={userRole}>
+              <CompanyDetailPage />
+            </Layout>
+          ) : (<Navigate to="/login" />)
         }/>
         <Route path="/drives/manage/:driveId" element={
-          isAuthenticated ? ( <Layout onLogout={handleLogout} userRole={userRole}><ManageDrivePage /></Layout> ) : (<Navigate to="/login" />)
+          isAuthenticated ? (
+            <Layout onLogout={handleLogout} userRole={userRole}>
+              <ManageDrivePage />
+            </Layout>
+          ) : (<Navigate to="/login" />)
         }/>
-        
-        {/* ADD THIS NEW ROUTE */}
         <Route path="/drives/details/:id" element={
-          isAuthenticated ? ( <Layout onLogout={handleLogout} userRole={userRole}><DriveDetailPage /></Layout> ) : (<Navigate to="/login" />)
+          isAuthenticated ? (
+            <Layout onLogout={handleLogout} userRole={userRole}>
+              <DriveDetailPage />
+            </Layout>
+          ) : (<Navigate to="/login" />)
         }/>
 
         <Route path="*" element={<Navigate to="/" />} />

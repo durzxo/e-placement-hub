@@ -44,6 +44,7 @@ const DriveDetailPage = () => {
       if (!drive) return;
       try {
         const res = await axios.get(`/api/offer-letter/company/${drive.companyName}`);
+        console.log('Fetched offer letters for company:', drive.companyName, res.data);
         // Map by moodleId for quick lookup
         const map = {};
         res.data.forEach(letter => {
@@ -188,6 +189,8 @@ const DriveDetailPage = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm min-w-[120px]">{(() => { const finalStatus = applicant.activity?.rounds?.finalStatus; if (finalStatus === 'Selected') { return <span className="font-bold text-green-600">100% (Selected)</span>; } if (finalStatus === 'Not Selected') { return <span className="font-bold text-red-600">0% (Not Selected)</span>; } if (predictions[applicant.studentId] === 'Loading...') { return <span className="text-gray-500">Calculating...</span>; } if (predictions[applicant.studentId] && predictions[applicant.studentId] !== 'Error') { const scoreText = predictions[applicant.studentId]; const score = parseFloat(scoreText); const colorClass = score > 90 ? 'text-green-600' : score > 70 ? 'text-yellow-600' : 'text-red-600'; return <span className={`font-bold ${colorClass}`}>{scoreText}</span>; } if (predictions[applicant.studentId] === 'Error') { return <span className="text-red-500 font-semibold">Error</span>; } return (<motion.button onClick={() => fetchPrediction(applicant.studentId)} className="inline-flex items-center text-xs font-semibold bg-purple-100 text-purple-600 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors duration-150" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}><Target className="w-4 h-4 mr-1" />Predict</motion.button>); })()}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm min-w-[120px]">{
                         (() => {
+                          // Debug log for matching
+                          console.log('Applicant:', applicant.name, 'moodleId:', applicant.moodleId, 'rollNumber:', applicant.rollNumber, 'OfferLetter:', offerLetters[applicant.moodleId] || offerLetters[applicant.rollNumber]);
                           const letter = offerLetters[applicant.moodleId] || offerLetters[applicant.rollNumber];
                           if (letter && letter.fileUrl) {
                             const isImage = letter.fileUrl.match(/\.(jpg|jpeg|png|gif)$/i);

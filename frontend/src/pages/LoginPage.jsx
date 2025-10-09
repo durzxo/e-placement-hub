@@ -5,8 +5,7 @@ import { Eye, EyeOff, Mail, Lock, GraduationCap } from 'lucide-react';
 
 const LoginPage = ({ setIsAuthenticated, setUserRole }) => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const role = searchParams.get('role') || 'student';
+  // Remove role from URL, will get from backend
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -25,25 +24,23 @@ const LoginPage = ({ setIsAuthenticated, setUserRole }) => {
     e.preventDefault();
     try {
       const response = await axios.post('/api/users/login', formData);
-      
-      // Save token and user role to localStorage
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userRole', role);
       localStorage.setItem('userEmail', formData.email);
-      
-      console.log('Received token:', response.data.token);
-      console.log('User role:', role);
-      
-      setIsAuthenticated(true);
-      setUserRole(role);
-      
-      // Redirect based on role
-      if (role === 'student') {
-        navigate('/dashboard'); // Student sees only dashboard
-      } else {
-        navigate('/dashboard'); // Admin sees full website functionality
+      // Decode JWT to get role
+      const payload = JSON.parse(atob(response.data.token.split('.')[1]));
+      const role = payload.user.role;
+      console.log('Decoded JWT payload:', payload); // Debug log
+      if (role !== 'student' && role !== 'admin') {
+        alert(`Unexpected role received: ${role}. Please contact admin.`);
+        setIsAuthenticated(false);
+        setUserRole(null);
+        return;
       }
-
+      localStorage.setItem('userRole', role);
+      setUserRole(role);
+      setIsAuthenticated(true);
+      // Redirect based on role
+      navigate('/dashboard');
     } catch (error) {
       console.error('Login Error:', error.response?.data || error.message);
       alert(`Login failed: ${error.response?.data?.message || 'Login error occurred'}`);
@@ -63,12 +60,7 @@ const LoginPage = ({ setIsAuthenticated, setUserRole }) => {
               </div>
             </div>
           </Link>
-          <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-            {role === 'student' ? 'Student Login' : 'Admin Login'}
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Signing in as {role === 'student' ? 'Student' : 'Administrator'}
-          </p>
+          <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">Login</h2>
         </div>
         
         <div className="bg-white py-8 px-6 shadow-xl rounded-xl border border-gray-200">
