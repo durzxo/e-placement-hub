@@ -12,6 +12,7 @@ const DriveDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [predictions, setPredictions] = useState({});
   const [isSummaryModalOpen, setSummaryModalOpen] = useState(false);
+  const [offerLetters, setOfferLetters] = useState({});
 
   const roundNames = ['aptitude', 'technical', 'hr', 'onlineAssessment', 'caseStudy', 'finalInterview', 'technicalTest', 'managerialRound', 'groupDiscussion', 'finalStatus'];
   const intermediateStatusOptions = ['Registered', 'Appeared', 'Cleared', 'Not Cleared', 'In Progress', 'N/A'];
@@ -37,6 +38,24 @@ const DriveDetailPage = () => {
   useEffect(() => {
     fetchData();
   }, [driveId]);
+
+  useEffect(() => {
+    const fetchOfferLetters = async () => {
+      if (!drive) return;
+      try {
+        const res = await axios.get(`/api/offer-letter/company/${drive.companyName}`);
+        // Map by moodleId for quick lookup
+        const map = {};
+        res.data.forEach(letter => {
+          map[letter.moodleId] = letter;
+        });
+        setOfferLetters(map);
+      } catch (err) {
+        setOfferLetters({});
+      }
+    };
+    fetchOfferLetters();
+  }, [drive]);
 
   const fetchPrediction = async (studentId) => {
     if (predictions[studentId] && predictions[studentId] !== 'Error') return;
@@ -150,6 +169,7 @@ const DriveDetailPage = () => {
                   {roundNames.slice(0, -1).map(round => (<th key={round} className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider whitespace-nowrap min-w-[120px]">{round.replace(/([A-Z])/g, ' $1').trim()}</th>))}
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider whitespace-nowrap min-w-[120px]">Final Status</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider whitespace-nowrap min-w-[120px]">ML Prediction</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider whitespace-nowrap min-w-[120px]">Offer Letter</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -166,6 +186,20 @@ const DriveDetailPage = () => {
                       })}
                       <td className="px-6 py-4 whitespace-nowrap text-sm min-w-[120px]"><motion.select value={applicant.activity?.rounds?.finalStatus || 'N/A'} onChange={(e) => handleStatusChange(applicant.studentId, 'finalStatus', e.target.value)} className={`w-full p-2 border rounded-md text-xs focus:ring-2 transition-all duration-200 ${applicant.activity?.rounds?.finalStatus === 'Selected' ? 'bg-green-100 border-green-400 focus:ring-green-500' : applicant.activity?.rounds?.finalStatus === 'Not Selected' ? 'bg-red-100 border-red-400 focus:ring-red-500' : 'border-gray-300 focus:ring-teal-500'}`}>{finalStatusOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}</motion.select></td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm min-w-[120px]">{(() => { const finalStatus = applicant.activity?.rounds?.finalStatus; if (finalStatus === 'Selected') { return <span className="font-bold text-green-600">100% (Selected)</span>; } if (finalStatus === 'Not Selected') { return <span className="font-bold text-red-600">0% (Not Selected)</span>; } if (predictions[applicant.studentId] === 'Loading...') { return <span className="text-gray-500">Calculating...</span>; } if (predictions[applicant.studentId] && predictions[applicant.studentId] !== 'Error') { const scoreText = predictions[applicant.studentId]; const score = parseFloat(scoreText); const colorClass = score > 90 ? 'text-green-600' : score > 70 ? 'text-yellow-600' : 'text-red-600'; return <span className={`font-bold ${colorClass}`}>{scoreText}</span>; } if (predictions[applicant.studentId] === 'Error') { return <span className="text-red-500 font-semibold">Error</span>; } return (<motion.button onClick={() => fetchPrediction(applicant.studentId)} className="inline-flex items-center text-xs font-semibold bg-purple-100 text-purple-600 px-3 py-1 rounded-full hover:bg-purple-200 transition-colors duration-150" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}><Target className="w-4 h-4 mr-1" />Predict</motion.button>); })()}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm min-w-[120px]">{
+                        (() => {
+                          const letter = offerLetters[applicant.moodleId] || offerLetters[applicant.rollNumber];
+                          if (letter && letter.fileUrl) {
+                            const isImage = letter.fileUrl.match(/\.(jpg|jpeg|png|gif)$/i);
+                            if (isImage) {
+                              return <a href={letter.fileUrl} target="_blank" rel="noopener noreferrer"><img src={letter.fileUrl} alt="Offer Letter" className="h-12 w-auto rounded shadow" /></a>;
+                            } else {
+                              return <a href={letter.fileUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">View PDF</a>;
+                            }
+                          }
+                          return <span className="text-gray-400">No Offer Letter</span>;
+                        })()
+                      }</td>
                     </motion.tr>
                   ))
                 ) : (

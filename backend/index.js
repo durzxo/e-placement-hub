@@ -8,6 +8,7 @@ const studentRoutes = require('./routes/studentRoutes');
 const userRoutes = require('./routes/userRoutes');
 const driveRoutes = require('./routes/driveRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
+const offerLetterRoutes = require('./routes/offerLetterRoutes');
 
 const app = express();
 
@@ -25,10 +26,13 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.error('MongoDB connection error:', err));
 
 // API Routes
+
 app.use('/api/users', userRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/drives', driveRoutes); // This is the correct and necessary call
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/offer-letter', offerLetterRoutes);
+app.use('/uploads', express.static('uploads'));
 
 
 app.listen(PORT, () => {

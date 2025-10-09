@@ -48,7 +48,7 @@ const Sidebar = ({ onLogout }) => {
             Dashboard
           </NavLink>
         </motion.div>
-        {userRole === 'admin' && (
+        {userRole === 'admin' ? (
           <>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <NavLink to="/students" className={navLinkClasses}>
@@ -63,13 +63,21 @@ const Sidebar = ({ onLogout }) => {
               </NavLink>
             </motion.div>
           </>
-        )}
+        ) : null}
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <NavLink to="/notices" className={navLinkClasses}>
             <Bell className="w-5 h-5 mr-3" />
             Notices
           </NavLink>
         </motion.div>
+        {userRole === 'student' && (
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <NavLink to="/offer-letter" className={navLinkClasses}>
+              <Briefcase className="w-5 h-5 mr-3" />
+              Offer Letter
+            </NavLink>
+          </motion.div>
+        )}
       </nav>
       <div className="p-4 border-t">
         <motion.button 

@@ -6,6 +6,9 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 // Accept chartData as a prop
 const PlacementDoughnut = ({ chartData }) => { 
+  if (!chartData || !chartData.labels || !chartData.data) {
+    return <div className="text-gray-500 p-6">No placement data available.</div>;
+  }
   const data = {
     labels: chartData.labels,
     datasets: [
@@ -17,14 +20,10 @@ const PlacementDoughnut = ({ chartData }) => {
       },
     ],
   };
-
-  // ... the rest of your component (options, JSX) remains the same
   const options = { /* ... your options ... */ };
   return (
     <div className="card-container">
-      {/* ... your JSX ... */}
       <Doughnut data={data} options={options} />
-      {/* ... your JSX ... */}
     </div>
   );
 };
