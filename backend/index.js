@@ -9,6 +9,7 @@ const userRoutes = require('./routes/userRoutes');
 const driveRoutes = require('./routes/driveRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const offerLetterRoutes = require('./routes/offerLetterRoutes');
+const authRoutes = require('./routes/authRoutes');
 const noticeRoutes = require('./routes/noticeRoutes');
 
 const app = express();
@@ -34,6 +35,7 @@ app.use('/api/drives', driveRoutes); // This is the correct and necessary call
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/offer-letter', offerLetterRoutes);
 app.use('/api/notices', noticeRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/uploads', express.static('uploads'));
 
 

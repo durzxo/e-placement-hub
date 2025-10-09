@@ -59,3 +59,60 @@ router.get('/stats', async (req, res) => {
 });
 
 module.exports = router;
+// @route   GET /api/dashboard/selected-students
+// @desc    Get all selected students grouped by company with package info
+router.get('/selected-students', async (req, res) => {
+  try {
+    // Aggregate selected students by company
+    const students = await Student.find({
+      'placementActivity.rounds.finalStatus': 'Selected'
+    });
+
+    // Group by company
+    const companyMap = {};
+    students.forEach(student => {
+      student.placementActivity.forEach(activity => {
+        if (activity.rounds.finalStatus === 'Selected') {
+          if (!companyMap[activity.company]) companyMap[activity.company] = [];
+          companyMap[activity.company].push({
+            studentId: student._id,
+            name: student.name,
+            rollNumber: student.rollNumber,
+            email: student.email,
+            package: activity.package || null
+          });
+        }
+      });
+    });
+    res.json(companyMap);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   PATCH /api/dashboard/update-package
+// @desc    Update package for a selected student for a company
+router.patch('/update-package', async (req, res) => {
+  try {
+    const { studentId, company, packageValue } = req.body;
+    if (!studentId || !company || packageValue === undefined) {
+      return res.status(400).json({ msg: 'Missing required fields.' });
+    }
+    const student = await Student.findById(studentId);
+    if (!student) return res.status(404).json({ msg: 'Student not found.' });
+    let updated = false;
+    student.placementActivity.forEach(activity => {
+      if (activity.company === company && activity.rounds.finalStatus === 'Selected') {
+        activity.package = packageValue;
+        updated = true;
+      }
+    });
+    if (!updated) return res.status(400).json({ msg: 'No matching selected activity found.' });
+    await student.save();
+    res.json({ msg: 'Package updated successfully.' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});

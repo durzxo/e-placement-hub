@@ -19,6 +19,7 @@ const placementActivitySchema = new mongoose.Schema({
   company: { type: String, required: true },
   date: { type: Date, required: true },
   rounds: roundsSchema,
+  package: { type: Number, default: null }, // Package received by student for this company
 }, { _id: false });
 
 // The main schema for a student

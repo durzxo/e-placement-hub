@@ -22,6 +22,7 @@ import CompanyDetailPage from './pages/CompanyDetailPage';
 import ManageDrivePage from './pages/ManageDrivePage';
 import DriveDetailPage from './pages/DriveDetailPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
+import SelectedStudentsPage from './pages/SelectedStudentsPage';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
@@ -31,9 +32,7 @@ function App() {
     const token = localStorage.getItem('token');
     if (token) {
       setIsAuthenticated(true);
-      // Extract role from localStorage if present, else null
-      const role = localStorage.getItem('userRole');
-      setUserRole(role);
+      setUserRole(localStorage.getItem('userRole'));
     } else {
       setIsAuthenticated(false);
       setUserRole(null);
@@ -111,6 +110,15 @@ function App() {
           isAuthenticated ? (
             <Layout onLogout={handleLogout} userRole={userRole}>
               <DriveDetailPage />
+            </Layout>
+          ) : (<Navigate to="/login" />)
+        }/>
+
+        {/* Selected Students Page for Admin */}
+        <Route path="/selected-students" element={
+          isAuthenticated && userRole === 'admin' ? (
+            <Layout onLogout={handleLogout} userRole={userRole}>
+              <SelectedStudentsPage />
             </Layout>
           ) : (<Navigate to="/login" />)
         }/>

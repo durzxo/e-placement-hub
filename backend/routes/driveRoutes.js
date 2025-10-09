@@ -202,3 +202,55 @@ router.post('/predict', async (req, res) => {
 });
 
 module.exports = router;
+
+// @route   GET /api/drives/:id/round-status
+// @desc    Get round-wise student status for a drive
+router.get('/:id/round-status', async (req, res) => {
+        console.log('Drive companyName:', drive.companyName);
+        console.log('Applicants found:', applicants.length);
+        applicants.forEach(student => {
+            const activity = student.placementActivity.find(a => a.company === drive.companyName);
+            console.log('Student:', student.name, '| Company:', activity ? activity.company : 'No activity');
+            if (activity) {
+                Object.entries(activity.rounds).forEach(([round, status]) => {
+                    console.log('  Round:', round, '| Status:', status);
+                });
+            }
+        });
+    try {
+        const drive = await Drive.findById(req.params.id);
+        if (!drive) return res.status(404).json({ message: 'Drive not found' });
+        const applicants = await Student.find({ 'placementActivity.company': drive.companyName });
+        // Use fixed round names to match frontend
+        const roundNames = [
+            'aptitude', 'technical', 'hr', 'onlineAssessment', 'caseStudy',
+            'finalInterview', 'technicalTest', 'managerialRound', 'groupDiscussion', 'finalStatus'
+        ];
+        const result = {};
+        roundNames.forEach(round => {
+            result[round] = {};
+        });
+        applicants.forEach(student => {
+            const activity = student.placementActivity.find(a => a.company === drive.companyName);
+            if (!activity) return;
+            roundNames.forEach(round => {
+                if (activity.rounds && Object.prototype.hasOwnProperty.call(activity.rounds, round)) {
+                    const status = activity.rounds[round] || 'N/A';
+                    if (!result[round][status]) result[round][status] = [];
+                    result[round][status].push({
+                        studentId: student._id,
+                        name: student.name,
+                        rollNumber: student.rollNumber,
+                        email: student.email,
+                        branch: student.branch,
+                        cgpa: student.cgpa
+                    });
+                }
+            });
+        });
+        res.json(result);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server Error');
+    }
+});
