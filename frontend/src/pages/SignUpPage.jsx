@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { Eye, EyeOff, Mail, Lock, User, GraduationCap } from 'lucide-react';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -13,6 +14,10 @@ const SignUpPage = () => {
     password: '',
     confirmPassword: ''
   });
+
+  // Get role from URL query parameter
+  const searchParams = new URLSearchParams(location.search);
+  const role = searchParams.get('role') || 'student';
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -32,8 +37,8 @@ const SignUpPage = () => {
     
     try {
       const { name, email, password } = formData;
-      // We only send the necessary fields to the backend
-      const payload = { name, email, password, role: 'student' }; // Assuming default role is 'student'
+      // Use the role from URL parameter
+      const payload = { name, email, password, role };
       
       await axios.post('/api/users/register', payload);
       
@@ -55,12 +60,12 @@ const SignUpPage = () => {
               <GraduationCap className="h-12 w-12 text-teal-600" />
               <div className="ml-3 text-center">
                 <h1 className="text-2xl font-bold text-gray-900">E-Placement Hub</h1>
-                <p className="text-sm text-gray-600">Computer Department</p>
+                <p className="text-sm text-gray-600">COMPUTER DEPARTMENT</p>
               </div>
             </div>
           </Link>
           <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-            Create your account
+            Create your {role === 'admin' ? 'Admin' : 'Student'} account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Already have an account?{' '}
@@ -135,10 +140,10 @@ const SignUpPage = () => {
                   value={formData.password}
                   onChange={handleInputChange}
                 />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center z-20">
                   <button
                     type="button"
-                    className="text-gray-400 hover:text-gray-500 focus:outline-none"
+                    className="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-600 transition-colors duration-150"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -170,10 +175,10 @@ const SignUpPage = () => {
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                 />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center z-20">
                   <button
                     type="button"
-                    className="text-gray-400 hover:text-gray-500 focus:outline-none"
+                    className="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-600 transition-colors duration-150"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (

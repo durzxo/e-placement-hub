@@ -25,70 +25,60 @@ import AdminDashboardPage from './pages/AdminDashboardPage';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const [userRole, setUserRole] = React.useState('student');
   
   React.useEffect(() => {
     const token = localStorage.getItem('token');
+    const role = localStorage.getItem('userRole') || 'student';
     if (token) {
       setIsAuthenticated(true);
+      setUserRole(role);
     }
   }, []);
 
   const handleLogout = () => {
+    const currentRole = localStorage.getItem('userRole') || 'student';
     localStorage.removeItem('token');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userEmail');
     setIsAuthenticated(false);
+    setUserRole('student');
+    // Return the role so Layout can use it for navigation
+    return currentRole;
   };
   
   return (
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} setUserRole={setUserRole} />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
 
         <Route path="/dashboard" element={
-            isAuthenticated ? (
-              <Layout onLogout={handleLogout}>
-                {localStorage.getItem('userRole') === 'admin' ? <AdminDashboardPage /> : <DashboardPage />}
-              </Layout>
-            ) : (<Navigate to="/login" />)
-        }/>
-        <Route path="/offer-letter" element={
-          isAuthenticated ? (
-            localStorage.getItem('userRole') === 'student'
-              ? <Layout onLogout={handleLogout}><OfferLetterPage /></Layout>
-              : <Layout onLogout={handleLogout}><div className="flex items-center justify-center h-full text-xl text-red-600">Access Denied: Only students can view this page.</div></Layout>
-          ) : (<Navigate to="/login" />)
+          isAuthenticated ? ( <Layout onLogout={handleLogout}><DashboardPage /></Layout> ) : (<Navigate to="/login" />)
         }/>
         <Route path="/notices" element={
-          isAuthenticated ? ( <Layout onLogout={handleLogout}><NoticesPage /></Layout> ) : (<Navigate to="/login" />)
+          isAuthenticated ? ( <Layout onLogout={handleLogout} userRole={userRole}><NoticesPage /></Layout> ) : (<Navigate to="/login" />)
         }/>
         <Route path="/students" element={
-          isAuthenticated ? (
-            localStorage.getItem('userRole') === 'admin'
-              ? <Layout onLogout={handleLogout}><StudentsPage /></Layout>
-              : <Layout onLogout={handleLogout}><div className="flex items-center justify-center h-full text-xl text-red-600">Access Denied: Students cannot view this page.</div></Layout>
-          ) : (<Navigate to="/login" />)
+          isAuthenticated ? ( <Layout onLogout={handleLogout}><StudentsPage /></Layout> ) : (<Navigate to="/login" />)
         }/>
         <Route path="/drives" element={
-          isAuthenticated ? (
-            localStorage.getItem('userRole') === 'admin'
-              ? <Layout onLogout={handleLogout}><DrivesListPage /></Layout>
-              : <Layout onLogout={handleLogout}><div className="flex items-center justify-center h-full text-xl text-red-600">Access Denied: Students cannot view this page.</div></Layout>
-          ) : (<Navigate to="/login" />)
+          isAuthenticated ? ( <Layout onLogout={handleLogout}><DrivesListPage /></Layout> ) : (<Navigate to="/login" />)
         }/>
         <Route path="/company/:companyId" element={
-          isAuthenticated ? ( <Layout onLogout={handleLogout}><CompanyDetailPage /></Layout> ) : (<Navigate to="/login" />)
+          isAuthenticated ? ( <Layout onLogout={handleLogout} userRole={userRole}><CompanyDetailPage /></Layout> ) : (<Navigate to="/login" />)
         }/>
         <Route path="/drives/manage/:driveId" element={
-          isAuthenticated ? ( <Layout onLogout={handleLogout}><ManageDrivePage /></Layout> ) : (<Navigate to="/login" />)
+          isAuthenticated ? ( <Layout onLogout={handleLogout} userRole={userRole}><ManageDrivePage /></Layout> ) : (<Navigate to="/login" />)
         }/>
         
         {/* ADD THIS NEW ROUTE */}
         <Route path="/drives/details/:id" element={
-          isAuthenticated ? ( <Layout onLogout={handleLogout}><DriveDetailPage /></Layout> ) : (<Navigate to="/login" />)
+          isAuthenticated ? ( <Layout onLogout={handleLogout} userRole={userRole}><DriveDetailPage /></Layout> ) : (<Navigate to="/login" />)
         }/>
 
         <Route path="*" element={<Navigate to="/" />} />
