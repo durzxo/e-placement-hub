@@ -33,32 +33,63 @@ router.post('/upload', upload.single('masterlist'), async (req, res) => {
     let studentsAdded = 0;
     let enrollments = 0;
 
+    // Helper: try multiple possible header names and also tolerant lookup
+    const getField = (row, candidates = []) => {
+      if (!row) return undefined;
+      // direct match first
+      for (const c of candidates) {
+        if (Object.prototype.hasOwnProperty.call(row, c)) return row[c];
+      }
+      // normalized lookup: lowercase and remove non-alphanumeric
+      const normMap = {};
+      for (const k of Object.keys(row)) {
+        const nk = k.toString().toLowerCase().replace(/[^a-z0-9]/g, '');
+        normMap[nk] = row[k];
+      }
+      for (const c of candidates) {
+        const nk = c.toString().toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (nk in normMap) return normMap[nk];
+      }
+      return undefined;
+    };
+
     for (const studentData of studentsJson) {
-      // Find or create the student
+      // Map headers: accept old and new header names
+      const rollNumber = getField(studentData, ['Roll Number', 'Superset ID', 'RollNumber', 'SupersetID']);
+      const name = getField(studentData, ['Name', 'Full Name']);
+      const moodleID = getField(studentData, ['Moodle ID', 'Roll No', 'RollNo', 'MoodleID']);
+      const cgpa = getField(studentData, ['CGPA', 'Cgpa']);
+      const branch = getField(studentData, ['Branch', 'Current Course', 'Current Course Program', 'Curent Course', 'CurrentCourseProgram']);
+      const email = getField(studentData, ['Email', 'Email Id', 'Email ID', 'EmailId']);
+      const phone = getField(studentData, ['Phone', 'Phone Number', 'PhoneNumber']);
+
+      // Find or create the student using the normalized fields
       const student = await Student.findOneAndUpdate(
-        { rollNumber: studentData['Roll Number'] },
+        { rollNumber: rollNumber },
         {
-          name: studentData.Name,
-          moodleID: studentData['Moodle ID'],
-          cgpa: studentData.CGPA,
-          branch: studentData.Branch,
-          email: studentData.Email,
-          phone: studentData.Phone,
+          name: name,
+          moodleID: moodleID,
+          cgpa: cgpa,
+          branch: branch,
+          email: email,
+          phone: phone,
         },
         { upsert: true, new: true } // upsert: create if not found
       );
       studentsAdded++;
 
-      // Now, handle the company enrollments
-      if (studentData.Companies) {
-        const companyNames = studentData.Companies.split(',').map(name => name.trim());
+      // Now, handle the company enrollments (accept Companies or Companies Applied)
+      const companiesField = getField(studentData, ['Companies', 'Company', 'Companies Applied', 'Applied Companies']);
+      if (companiesField) {
+        // accept comma or semicolon separated lists
+        const companyNames = companiesField.toString().split(/[,;]+/).map(name => name.trim()).filter(Boolean);
         
         for (const companyName of companyNames) {
           const drive = await Drive.findOne({ companyName: companyName });
           if (drive) {
             // Check if the student is already enrolled in this drive to avoid duplicates
             const isAlreadyEnrolled = student.placementActivity.some(activity => activity.company === companyName);
-            
+
             if (!isAlreadyEnrolled) {
               student.placementActivity.push({
                 company: drive.companyName,

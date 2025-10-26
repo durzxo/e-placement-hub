@@ -4,7 +4,18 @@ import axios from 'axios';
 const OfferLetterPage = () => {
   const [file, setFile] = useState(null);
   const [fullName, setFullName] = useState('');
-  const [moodleId, setMoodleId] = useState('');
+  // Prefill Moodle ID from logged-in user's email stored in localStorage.
+  // If the email contains an '@', use the part before it (common username). Otherwise use the whole value.
+  const initialMoodleId = (() => {
+    try {
+      const e = localStorage.getItem('userEmail');
+      if (!e) return '';
+      return e.includes('@') ? e.split('@')[0] : e;
+    } catch (err) {
+      return '';
+    }
+  })();
+  const [moodleId, setMoodleId] = useState(initialMoodleId);
   const [companyName, setCompanyName] = useState('');
   const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState(false);

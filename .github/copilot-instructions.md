@@ -24,7 +24,7 @@ Key Integration Points:
   - Round status updates validate against drive's round keys
 - **File Processing**:
   - Student masterlist upload via `multipart/form-data`
-  - Required columns: `Roll Number,Name,Moodle ID,CGPA,Branch,Email,Phone,Companies`
+  - Required columns: `Superset ID,Name,Moodle ID,CGPA,Branch,Email,Phone,Companies`
 - **ML Integration**: 
   - Endpoint: `POST http://localhost:8000/predict`
   - Returns: `{ prediction_score, predicted_class }`

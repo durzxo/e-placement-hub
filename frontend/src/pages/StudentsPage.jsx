@@ -79,7 +79,7 @@ const StudentsPage = () => {
         <div className="flex items-center justify-between mb-6">
           <input
             type="text"
-            placeholder="Search by name or roll number..."
+            placeholder="Search by name or Superset ID..."
             className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all duration-200"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -108,7 +108,7 @@ const StudentsPage = () => {
     {/* --- THIS IS THE PART THAT WAS LIKELY MISSING --- */}
     <thead className="bg-gray-50">
       <tr>
-        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roll Number</th>
+  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Superset ID</th>
         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Moodle ID</th>
         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CGPA</th>

@@ -22,7 +22,7 @@ const StudentDetailModal = ({ student, isOpen, onClose }) => {
             </svg>
           </button>
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Student Details</h2>
-          <p className="text-gray-500 mb-6">Roll No: {student.rollNumber}</p>
+          <p className="text-gray-500 mb-6">Superset ID: {student.rollNumber}</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-6">
             <div>
               <p className="font-semibold text-gray-700">Name:</p>

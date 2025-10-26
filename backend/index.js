@@ -4,6 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 const studentRoutes = require('./routes/studentRoutes');
 const userRoutes = require('./routes/userRoutes');
 const driveRoutes = require('./routes/driveRoutes');
@@ -36,7 +37,9 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/offer-letter', offerLetterRoutes);
 app.use('/api/notices', noticeRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/uploads', express.static('uploads'));
+// Serve uploads from the project-level uploads folder so files saved to
+// ../../uploads (from route's multer destination) are accessible.
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 
 app.listen(PORT, () => {

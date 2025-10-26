@@ -90,7 +90,7 @@ const SelectedStudentsPage = () => {
               <thead>
                 <tr>
                   <th className="border px-2 py-1">Name</th>
-                  <th className="border px-2 py-1">Roll Number</th>
+                  <th className="border px-2 py-1">Superset ID</th>
                   <th className="border px-2 py-1">Email</th>
                   <th className="border px-2 py-1">Package (₹)</th>
                   <th className="border px-2 py-1">Action</th>

@@ -62,7 +62,7 @@ const AdminDashboard = ({ setView }) => {
           <thead>
             <tr>
               <th>Name</th>
-              <th>Roll No.</th>
+              <th>Superset ID</th>
               <th>Branch</th>
               <th>CGPA</th>
               <th>Status</th>
