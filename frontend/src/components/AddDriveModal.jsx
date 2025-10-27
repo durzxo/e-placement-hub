@@ -18,15 +18,51 @@ const AddDriveModal = ({ isOpen, onClose, onDriveAdded }) => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // --- NEW: State to hold our validation error message ---
+  const [dateError, setDateError] = useState('');
+
+  // --- THIS LOGIC IS NOW FIXED ---
+  // Gets today's date in YYYY-MM-DD format based on LOCAL time, not UTC
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  const day = String(today.getDate()).padStart(2, '0');
+  const minDate = `${year}-${month}-${day}`;
+  // --- END OF FIX ---
 
   if (!isOpen) return null;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // --- NEW: Clear the error message as the user types ---
+    if (dateError) {
+      setDateError('');
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // --- NEW VALIDATION BLOCK ---
+    const { driveDate, applicationDeadline } = formData;
+    
+    // Check 1: Are dates in the past?
+    if (driveDate < minDate || applicationDeadline < minDate) {
+      setDateError('Drive Date and Application Deadline cannot be in the past.');
+      return; // Stop the submission
+    }
+
+    // Check 2: Is the deadline after the drive date?
+    if (applicationDeadline > driveDate) {
+      setDateError('Application Deadline cannot be after the Drive Date.');
+      return; // Stop the submission
+    }
+    
+    setDateError(''); // Clear any old errors if all checks pass
+    // --- END OF VALIDATION BLOCK ---
+
+
     setIsSubmitting(true);
     try {
       await axios.post('/api/drives', formData);
@@ -221,9 +257,11 @@ const AddDriveModal = ({ isOpen, onClose, onDriveAdded }) => {
                     <input 
                       type="date" 
                       name="driveDate" 
+                      value={formData.driveDate}
                       onChange={handleChange} 
                       required 
                       className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200" 
+                      min={minDate}
                     />
                   </motion.div>
                   
@@ -236,12 +274,25 @@ const AddDriveModal = ({ isOpen, onClose, onDriveAdded }) => {
                     <input 
                       type="date" 
                       name="applicationDeadline" 
+                      value={formData.applicationDeadline}
                       onChange={handleChange} 
                       required 
                       className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200" 
+                      min={minDate}
                     />
                   </motion.div>
                 </div>
+
+                {/* --- NEW: ERROR MESSAGE DISPLAY --- */}
+                {dateError && (
+                  <motion.div
+                    className="text-red-600 font-medium text-sm p-3 bg-red-100 rounded-lg text-center"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                  >
+                    {dateError}
+                  </motion.div>
+                )}
                 
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -309,3 +360,4 @@ const AddDriveModal = ({ isOpen, onClose, onDriveAdded }) => {
 };
 
 export default AddDriveModal;
+
