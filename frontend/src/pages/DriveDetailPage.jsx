@@ -56,10 +56,13 @@ const DriveDetailPage = () => {
       if (!drive) return;
       try {
         const res = await axios.get(`/api/offer-letter/company/${drive.companyName}`);
-        // Map by moodleId for quick lookup
+        // Map offer letters by multiple keys for robust lookup: moodleId, rollNumber (Superset ID) and normalized fullName
         const map = {};
+        const normalize = s => (s || '').toString().toLowerCase().trim();
         res.data.forEach(letter => {
-          map[letter.moodleId] = letter;
+          if (letter.moodleId) map[letter.moodleId] = letter;
+          if (letter.rollNumber) map[letter.rollNumber] = letter;
+          if (letter.fullName) map[`name:${normalize(letter.fullName)}`] = letter;
         });
         setOfferLetters(map);
       } catch (err) {
@@ -180,7 +183,7 @@ const DriveDetailPage = () => {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider sticky left-0 bg-gray-50 z-10 min-w-[150px] border-r border-gray-200">Name</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider min-w-[100px]">Roll No</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider min-w-[100px]">Superset ID</th>
                       {roundNames.slice(0, -1).map(round => (<th key={round} className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider whitespace-nowrap min-w-[120px]">{round.replace(/([A-Z])/g, ' $1').trim()}</th>))}
                       <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider whitespace-nowrap min-w-[120px]">Final Status</th>
                       <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider whitespace-nowrap min-w-[120px]">ML Prediction</th>
@@ -204,12 +207,16 @@ const DriveDetailPage = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm min-w-[120px]">{
                             (() => {
                               let letter = null;
+                              const tryNormalizeNameKey = (n) => `name:${n.toString().toLowerCase().trim()}`;
                               if (applicant.moodleId && offerLetters[applicant.moodleId]) {
                                 letter = offerLetters[applicant.moodleId];
                               } else if (applicant.rollNumber && offerLetters[applicant.rollNumber]) {
                                 letter = offerLetters[applicant.rollNumber];
+                              } else if (applicant.name && offerLetters[tryNormalizeNameKey(applicant.name)]) {
+                                letter = offerLetters[tryNormalizeNameKey(applicant.name)];
                               } else if (applicant.name) {
-                                letter = Object.values(offerLetters).find(l => l.fullName === applicant.name);
+                                // fallback: try matching by exact fullName among values
+                                letter = Object.values(offerLetters).find(l => l.fullName && l.fullName.toString().toLowerCase().trim() === applicant.name.toString().toLowerCase().trim());
                               }
                               if (letter && letter.fileUrl) {
                                 const backendBase = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';

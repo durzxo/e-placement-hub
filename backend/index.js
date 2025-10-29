@@ -39,7 +39,10 @@ app.use('/api/offer-letter', offerLetterRoutes);
 app.use('/api/notices', noticeRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// Serve uploads from the project-level uploads folder so files saved to
+// ../../uploads (from route's multer destination) are accessible.
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 
 app.listen(PORT, () => {

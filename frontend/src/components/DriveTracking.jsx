@@ -41,7 +41,7 @@ const DriveTracking = ({ setView }) => {
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Roll No.</th>
+                <th>Superset ID</th>
                 <th>Branch</th>
                 <th>Status</th>
               </tr>

@@ -24,7 +24,7 @@ const FinalRoundSummaryModal = ({ students, onClose, count }) => {
               {students.map((student) => (
                 <li key={student.id} className="student-list-item">
                   <span className="student-name">{student.name}</span>
-                  <span className="student-roll">Roll No: {student.rollNo}</span>
+                  <span className="student-roll">Superset ID: {student.rollNo}</span>
                 </li>
               ))}
             </ul>
