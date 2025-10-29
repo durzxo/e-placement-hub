@@ -47,21 +47,18 @@ const HomePage = () => {
               
               <div className="text-center w-full max-w-2xl">
                 <p className="text-gray-600 mb-4 text-lg">Don't have an account?</p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <div className="flex flex-col gap-4 justify-center items-center max-w-md mx-auto">
                   <Link 
-                    to="/signup?role=student" 
-                    className="group inline-flex items-center border-2 border-blue-600 text-blue-600 font-semibold px-8 py-4 rounded-lg text-lg hover:bg-blue-600 hover:text-white hover:shadow-lg transition-all duration-300 transform hover:scale-105 w-full sm:w-auto justify-center"
+                    to="/signup" 
+                    className="group inline-flex items-center border-2 border-blue-600 text-blue-600 font-semibold px-8 py-4 rounded-lg text-lg hover:bg-blue-600 hover:text-white hover:shadow-lg transition-all duration-300 transform hover:scale-105 w-full justify-center"
                   >
                     Create Student Account
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
                   </Link>
-                  <Link 
-                    to="/signup?role=admin" 
-                    className="group inline-flex items-center border-2 border-teal-600 text-teal-600 font-semibold px-8 py-4 rounded-lg text-lg hover:bg-teal-600 hover:text-white hover:shadow-lg transition-all duration-300 transform hover:scale-105 w-full sm:w-auto justify-center"
-                  >
-                    Create Admin Account
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
-                  </Link>
+                  <div className="text-center">
+                    <p className="text-sm text-gray-600 mb-1">Only APSIT students can register</p>
+                    <p className="text-xs text-gray-500">Use your college email: moodleid@apsit.edu.in</p>
+                  </div>
                 </div>
               </div>
             </div>

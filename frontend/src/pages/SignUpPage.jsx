@@ -14,10 +14,19 @@ const SignUpPage = () => {
     password: '',
     confirmPassword: ''
   });
+  const [errors, setErrors] = useState({});
 
-  // Get role from URL query parameter
-  const searchParams = new URLSearchParams(location.search);
-  const role = searchParams.get('role') || 'student';
+  // Validate APSIT email format
+  const validateApsitEmail = (email) => {
+    const apsitEmailRegex = /^\d{8}@apsit\.edu\.in$/;
+    return apsitEmailRegex.test(email);
+  };
+
+  // Extract Moodle ID from email
+  const getMoodleIdFromEmail = (email) => {
+    const match = email.match(/^(\d{8})@apsit\.edu\.in$/);
+    return match ? match[1] : null;
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -29,25 +38,62 @@ const SignUpPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
+    
+    // Validation
+    const newErrors = {};
+    
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!validateApsitEmail(formData.email)) {
+      newErrors.email = 'Please use your APSIT college email in format: moodleid@apsit.edu.in (where moodleid is your 8-digit student ID)';
+    }
+    
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
     
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
     
     try {
       const { name, email, password } = formData;
-      // Use the role from URL parameter
-      const payload = { name, email, password, role };
+      const moodleId = getMoodleIdFromEmail(email);
+      
+      const payload = { 
+        name, 
+        email, 
+        password, 
+        role: 'student',
+        moodleId: moodleId
+      };
       
       await axios.post('/api/users/register', payload);
       
-      alert('Signup successful! Please proceed to log in.');
-      navigate('/login');
+      navigate('/login', { 
+        state: { 
+          message: 'Registration successful! Please login with your credentials.',
+          email: email
+        }
+      });
 
     } catch (error) {
-      console.error('Signup Error:', error.response.data);
-      alert(`Signup failed: ${error.response.data.message}`);
+      console.error('Signup Error:', error.response?.data);
+      setErrors({
+        submit: error.response?.data?.message || 'Registration failed. Please try again.'
+      });
     }
   };
 
@@ -65,9 +111,12 @@ const SignUpPage = () => {
             </div>
           </Link>
           <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-            Create your {role === 'admin' ? 'Admin' : 'Student'} account
+            Create your Student account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
+            Use your APSIT college email to register
+          </p>
+          <p className="mt-1 text-center text-sm text-gray-500">
             Already have an account?{' '}
             <Link to="/login" className="font-medium text-teal-600 hover:text-teal-500">
               Sign in here
@@ -91,17 +140,22 @@ const SignUpPage = () => {
                   type="text"
                   autoComplete="name"
                   required
-                  className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
+                  className={`appearance-none relative block w-full pl-10 pr-3 py-3 border placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm ${
+                    errors.name ? 'border-red-500' : 'border-gray-300'
+                  }`}
                   placeholder="Enter your full name"
                   value={formData.name}
                   onChange={handleInputChange}
                 />
               </div>
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+              )}
             </div>
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
+                APSIT College Email
               </label>
               <div className="mt-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -113,12 +167,18 @@ const SignUpPage = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  className="appearance-none relative block w-full pl-10 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
-                  placeholder="Enter your email address"
+                  className={`appearance-none relative block w-full pl-10 pr-3 py-3 border placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm ${
+                    errors.email ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder="12345678@apsit.edu.in"
                   value={formData.email}
                   onChange={handleInputChange}
                 />
               </div>
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              )}
+              <p className="mt-1 text-xs text-gray-500">Use your 8-digit Moodle ID followed by @apsit.edu.in</p>
             </div>
 
             <div>
@@ -135,7 +195,9 @@ const SignUpPage = () => {
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="new-password"
                   required
-                  className="appearance-none relative block w-full pl-10 pr-10 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
+                  className={`appearance-none relative block w-full pl-10 pr-10 py-3 border placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm ${
+                    errors.password ? 'border-red-500' : 'border-gray-300'
+                  }`}
                   placeholder="Create a password"
                   value={formData.password}
                   onChange={handleInputChange}
@@ -154,6 +216,9 @@ const SignUpPage = () => {
                   </button>
                 </div>
               </div>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+              )}
             </div>
 
             <div>
@@ -170,7 +235,9 @@ const SignUpPage = () => {
                   type={showConfirmPassword ? 'text' : 'password'}
                   autoComplete="new-password"
                   required
-                  className="appearance-none relative block w-full pl-10 pr-10 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
+                  className={`appearance-none relative block w-full pl-10 pr-10 py-3 border placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm ${
+                    errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+                  }`}
                   placeholder="Confirm your password"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
@@ -189,6 +256,9 @@ const SignUpPage = () => {
                   </button>
                 </div>
               </div>
+              {errors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
+              )}
             </div>
 
             <div className="flex items-center">
@@ -211,12 +281,18 @@ const SignUpPage = () => {
               </label>
             </div>
 
+            {errors.submit && (
+              <div className="rounded-md bg-red-50 p-4">
+                <p className="text-sm text-red-800">{errors.submit}</p>
+              </div>
+            )}
+
             <div>
               <button
                 type="submit"
                 className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
               >
-                Create Account
+                Create Student Account
               </button>
             </div>
           </form>

@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { Eye, EyeOff, Mail, Lock, GraduationCap } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
-const LoginPage = ({ setIsAuthenticated, setUserRole }) => {
+const LoginPage = () => {
+  const { login } = useAuth();
   const navigate = useNavigate();
   // Remove role from URL, will get from backend
   const [showPassword, setShowPassword] = useState(false);
@@ -22,28 +24,80 @@ const LoginPage = ({ setIsAuthenticated, setUserRole }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     try {
-      const response = await axios.post('/api/users/login', formData);
+      let response;
+      
+      // Check if email looks like an admin email
+      const isAdminEmail = formData.email.includes('admin') || 
+                          formData.email.includes('hod') || 
+                          formData.email.includes('placement');
+      
+      console.log('Login attempt:', { email: formData.email, isAdminEmail });
+      
+      if (isAdminEmail) {
+        // Try admin login first
+        try {
+          console.log('Attempting admin login...');
+          response = await axios.post('/api/admin/login', formData);
+          console.log('Admin login successful:', response.data);
+        } catch (adminError) {
+          console.log('Admin login failed:', adminError.response?.data);
+          // If admin login fails, try regular login as fallback
+          if (adminError.response?.status === 401) {
+            console.log('Trying regular login as fallback...');
+            response = await axios.post('/api/users/login', formData);
+          } else {
+            throw adminError;
+          }
+        }
+      } else {
+        // Regular student login
+        console.log('Attempting regular student login...');
+        response = await axios.post('/api/users/login', formData);
+        console.log('Student login successful:', response.data);
+      }
+      
+      console.log('Storing token and user data...');
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userEmail', formData.email);
-      // Decode JWT to get role
-      const payload = JSON.parse(atob(response.data.token.split('.')[1]));
-      const role = payload.user.role;
-      console.log('Decoded JWT payload:', payload); // Debug log
-      if (role !== 'student' && role !== 'admin') {
-        alert(`Unexpected role received: ${role}. Please contact admin.`);
-        setIsAuthenticated(false);
-        setUserRole(null);
-        return;
+      
+      // Store user role for easy access
+      if (response.data.user && response.data.user.role) {
+        localStorage.setItem('userRole', response.data.user.role);
+        console.log('User role stored:', response.data.user.role);
       }
-      localStorage.setItem('userRole', role);
-      setUserRole(role);
-      setIsAuthenticated(true);
-      // Redirect based on role
-      navigate('/dashboard');
+      
+      // Use AuthContext login method
+      login(response.data.token);
+      console.log('AuthContext login called');
+      
+      // Small delay to ensure auth context updates
+      setTimeout(() => {
+        // Redirect based on role from the response
+        const userRole = response.data.user?.role;
+        console.log('Redirecting user with role:', userRole);
+        
+        if (userRole === 'admin') {
+          console.log('Redirecting to admin dashboard');
+          navigate('/admin-dashboard');
+        } else {
+          console.log('Redirecting to student dashboard');
+          navigate('/dashboard');
+        }
+      }, 100);
+      
     } catch (error) {
       console.error('Login Error:', error.response?.data || error.message);
-      alert(`Login failed: ${error.response?.data?.message || 'Login error occurred'}`);
+      let errorMessage = 'Login failed. Please try again.';
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.response?.status === 401) {
+        errorMessage = 'Invalid email or password.';
+      }
+      
+      alert(errorMessage);
     }
   };
 

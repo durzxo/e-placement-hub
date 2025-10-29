@@ -18,6 +18,24 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['student', 'admin', 'company'],
     default: 'student'
+  },
+  moodleId: {
+    type: String,
+    required: function() {
+      return this.role === 'student';
+    },
+    unique: true,
+    sparse: true, // Allows null values to not conflict with uniqueness
+    validate: {
+      validator: function(v) {
+        // Only validate for students, and only if moodleId is provided
+        if (this.role === 'student' && v) {
+          return /^\d{8}$/.test(v);
+        }
+        return true;
+      },
+      message: 'Moodle ID must be exactly 8 digits'
+    }
   }
 }, { timestamps: true });
 

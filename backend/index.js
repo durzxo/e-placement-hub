@@ -4,6 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 const studentRoutes = require('./routes/studentRoutes');
 const userRoutes = require('./routes/userRoutes');
 const driveRoutes = require('./routes/driveRoutes');
@@ -11,6 +12,7 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const offerLetterRoutes = require('./routes/offerLetterRoutes');
 const authRoutes = require('./routes/authRoutes');
 const noticeRoutes = require('./routes/noticeRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
@@ -36,7 +38,8 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/offer-letter', offerLetterRoutes);
 app.use('/api/notices', noticeRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/uploads', express.static('uploads'));
+app.use('/api/admin', adminRoutes);
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 
 app.listen(PORT, () => {

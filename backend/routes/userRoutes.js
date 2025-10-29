@@ -17,19 +17,77 @@ const transporter = nodemailer.createTransport({
 });
 
 // @route   POST /api/users/register
-// @desc    Register a new user (for both Register and SignUp pages)
+// @desc    Register a new user (students only with APSIT email)
 router.post('/register', async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, moodleId } = req.body;
+  
   try {
+    // Validate APSIT email format for students
+    if (role === 'student' || !role) {
+      const apsitEmailRegex = /^\d{8}@apsit\.edu\.in$/;
+      if (!apsitEmailRegex.test(email)) {
+        return res.status(400).json({ 
+          message: 'Only APSIT students can register. Please use your college email in format: moodleid@apsit.edu.in' 
+        });
+      }
+      
+      // Extract and validate Moodle ID
+      const extractedMoodleId = email.match(/^(\d{8})@apsit\.edu\.in$/)[1];
+      if (!moodleId || moodleId !== extractedMoodleId) {
+        return res.status(400).json({ 
+          message: 'Invalid Moodle ID. Please ensure your email matches your 8-digit student ID.' 
+        });
+      }
+    }
+    
+    // Prevent admin registration through this endpoint
+    if (role === 'admin') {
+      return res.status(403).json({ 
+        message: 'Admin accounts cannot be created through registration. Please contact system administrator.' 
+      });
+    }
+    
+    // Check if user already exists
     let user = await User.findOne({ email });
-    if (user) return res.status(400).json({ message: 'User already exists' });
-    user = new User({ name, email, password, role });
+    if (user) {
+      return res.status(400).json({ message: 'User already exists with this email address' });
+    }
+    
+    // Check if moodleId already exists for students
+    if (moodleId) {
+      const existingMoodleUser = await User.findOne({ moodleId });
+      if (existingMoodleUser) {
+        return res.status(400).json({ message: 'A student account already exists with this Moodle ID' });
+      }
+    }
+    
+    // Create new user
+    user = new User({ 
+      name, 
+      email, 
+      password, 
+      role: 'student', // Force role to student
+      moodleId: moodleId || null
+    });
+    
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
     await user.save();
-    res.status(201).json({ message: 'User registered successfully!' });
+    
+    res.status(201).json({ 
+      success: true,
+      message: 'Student account registered successfully! You can now login.',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        moodleId: user.moodleId
+      }
+    });
   } catch (error) {
-    res.status(500).send('Server Error');
+    console.error('Registration error:', error);
+    res.status(500).json({ message: 'Server error during registration. Please try again.' });
   }
 });
 

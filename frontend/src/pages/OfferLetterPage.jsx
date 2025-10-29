@@ -120,13 +120,16 @@ const OfferLetterPage = () => {
         <div className="mt-6 p-4 border rounded-lg bg-teal-50">
           <h3 className="text-lg font-semibold text-teal-700 mb-2">Your Uploaded Offer Letter:</h3>
           <a
-            href={uploadedLetter.fileUrl}
+            href={`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'}${uploadedLetter.fileUrl}`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-teal-600 underline"
           >
-            View Offer Letter
+            View Offer Letter (PDF)
           </a>
+          <div className="mt-2 text-sm text-gray-600">
+            Company: {uploadedLetter.companyName}
+          </div>
         </div>
       )}
     </div>
