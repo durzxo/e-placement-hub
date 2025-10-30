@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { Target, ArrowLeft } from 'lucide-react';
 import FinalRoundSummaryModal from '../components/FinalRoundSummaryModal';
@@ -18,7 +19,7 @@ const DriveDetailPage = () => {
       setRoundStatusLoading(false);
     }).catch(() => setRoundStatusLoading(false));
   }, [driveId]);
-  const [enlargedImage, setEnlargedImage] = useState(null);
+  const [_enlargedImage, _setEnlargedImage] = useState(null);
   const [drive, setDrive] = useState(null);
   const [applicants, setApplicants] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -49,6 +50,7 @@ const DriveDetailPage = () => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [driveId]);
 
   useEffect(() => {
@@ -65,7 +67,7 @@ const DriveDetailPage = () => {
           if (letter.fullName) map[`name:${normalize(letter.fullName)}`] = letter;
         });
         setOfferLetters(map);
-      } catch (err) {
+      } catch {
         setOfferLetters({});
       }
     };
@@ -129,7 +131,7 @@ const DriveDetailPage = () => {
 
   if (loading) {
     return (
-      <motion.div className="flex items-center justify-center min-h-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <motion.div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         <motion.div className="w-16 h-16 border-4 border-teal-200 border-t-teal-600 rounded-full" animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} />
         <motion.p className="ml-4 text-lg text-gray-600" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
           Loading drive details...
@@ -140,18 +142,18 @@ const DriveDetailPage = () => {
 
   if (!drive) {
     return (
-      <motion.div className="p-8 text-center" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+      <motion.div className="p-8 text-center bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 min-h-screen" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <h2 className="text-2xl font-bold">Drive not found.</h2>
       </motion.div>
     );
   }
 
   return (
-    <motion.div className="p-4 sm:p-6 bg-gray-50 min-h-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+    <motion.div className="p-4 sm:p-6 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 min-h-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
       <div className="max-w-full mx-auto px-4 lg:px-8">
         <div className="flex space-x-4 mb-6">
-          <button className={`px-4 py-2 rounded-lg font-semibold ${activeTab === 'applicants' ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-700'}`} onClick={() => setActiveTab('applicants')}>Applicants</button>
-          <button className={`px-4 py-2 rounded-lg font-semibold ${activeTab === 'roundStatus' ? 'bg-teal-600 text-white' : 'bg-gray-200 text-gray-700'}`} onClick={() => setActiveTab('roundStatus')}>Round-wise Status</button>
+          <button className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${activeTab === 'applicants' ? 'bg-teal-600 text-white shadow-lg transform scale-105' : 'bg-white text-gray-700 hover:bg-gray-100 shadow-md hover:shadow-lg'}`} onClick={() => setActiveTab('applicants')}>Applicants</button>
+          <button className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${activeTab === 'roundStatus' ? 'bg-teal-600 text-white shadow-lg transform scale-105' : 'bg-white text-gray-700 hover:bg-gray-100 shadow-md hover:shadow-lg'}`} onClick={() => setActiveTab('roundStatus')}>Round-wise Status</button>
         </div>
         {activeTab === 'applicants' ? (
           <>
@@ -285,7 +287,7 @@ const DriveDetailPage = () => {
           count={clearedCount}
         />
       )}
-      {enlargedImage && (
+      {_enlargedImage && (
         <></>
       )}
     </motion.div>

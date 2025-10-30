@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
@@ -31,32 +32,32 @@ const AddNoticeModal = ({ isOpen, onClose, onSubmit }) => {
 
     return (
         <motion.div
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+            className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
         >
             <motion.div
-                className="bg-white rounded-xl shadow-xl w-full max-w-2xl"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
+                className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl border border-gray-200"
+                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 20 }}
             >
-                <div className="p-6 border-b border-gray-200">
+                <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-teal-500 to-teal-600 rounded-t-2xl">
                     <div className="flex justify-between items-center">
-                        <h2 className="text-2xl font-bold text-gray-900">Add New Notice</h2>
+                        <h2 className="text-2xl font-bold text-white">Add New Notice</h2>
                         <button
                             onClick={onClose}
-                            className="text-gray-400 hover:text-gray-500 transition-colors"
+                            className="text-white hover:text-gray-200 transition-colors hover:bg-white/20 rounded-full p-2"
                         >
                             <X className="h-6 w-6" />
                         </button>
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                <form onSubmit={handleSubmit} className="p-6 space-y-5">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
                             Title
                         </label>
                         <input
@@ -65,12 +66,13 @@ const AddNoticeModal = ({ isOpen, onClose, onSubmit }) => {
                             value={formData.title}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 hover:border-teal-300"
+                            placeholder="Enter notice title"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
                             Content
                         </label>
                         <textarea
@@ -79,13 +81,14 @@ const AddNoticeModal = ({ isOpen, onClose, onSubmit }) => {
                             onChange={handleChange}
                             required
                             rows={4}
-                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 hover:border-teal-300 resize-none"
+                            placeholder="Enter notice content"
                         />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
                                 Date
                             </label>
                             <input
@@ -94,12 +97,12 @@ const AddNoticeModal = ({ isOpen, onClose, onSubmit }) => {
                                 value={formData.date}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 hover:border-teal-300"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
                                 Time
                             </label>
                             <input
@@ -108,14 +111,14 @@ const AddNoticeModal = ({ isOpen, onClose, onSubmit }) => {
                                 value={formData.time}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 hover:border-teal-300"
                             />
                         </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
                                 Priority
                             </label>
                             <select
@@ -123,7 +126,7 @@ const AddNoticeModal = ({ isOpen, onClose, onSubmit }) => {
                                 value={formData.priority}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 hover:border-teal-300 bg-white"
                             >
                                 <option value="high">High</option>
                                 <option value="medium">Medium</option>
@@ -132,7 +135,7 @@ const AddNoticeModal = ({ isOpen, onClose, onSubmit }) => {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
                                 Category
                             </label>
                             <select
@@ -140,7 +143,7 @@ const AddNoticeModal = ({ isOpen, onClose, onSubmit }) => {
                                 value={formData.category}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 hover:border-teal-300 bg-white"
                             >
                                 <option value="placement">Placement</option>
                                 <option value="workshop">Workshop</option>
@@ -151,17 +154,17 @@ const AddNoticeModal = ({ isOpen, onClose, onSubmit }) => {
                         </div>
                     </div>
 
-                    <div className="pt-4 border-t flex justify-end space-x-3">
+                    <div className="pt-4 border-t border-gray-200 flex justify-end space-x-3">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                            className="px-6 py-2.5 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all duration-200 font-semibold border border-gray-300 hover:border-gray-400"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            className="px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-lg hover:from-teal-700 hover:to-teal-800 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
                         >
                             Add Notice
                         </button>

@@ -4,7 +4,7 @@ import { GraduationCap, ArrowRight } from 'lucide-react';
 
 const HomePage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -31,14 +31,14 @@ const HomePage = () => {
               <div className="flex flex-col lg:flex-row gap-6 justify-center items-center w-full max-w-4xl">
                 <Link 
                   to="/login?role=student" 
-                  className="group inline-flex items-center bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold px-12 py-6 rounded-xl text-xl hover:from-blue-700 hover:to-blue-800 hover:shadow-2xl transition-all duration-300 shadow-lg transform hover:scale-105 hover:-translate-y-1 w-full lg:w-auto justify-center"
+                  className="group inline-flex items-center bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold px-12 py-6 rounded-xl text-xl hover:from-blue-700 hover:to-blue-800 hover:shadow-2xl transition-all duration-300 shadow-lg transform hover:scale-105 hover:-translate-y-1 w-full lg:w-auto justify-center hover:shadow-blue-500/50"
                 >
                   Login as Student
                   <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
                 <Link 
                   to="/login?role=admin" 
-                  className="group inline-flex items-center bg-gradient-to-r from-teal-600 to-teal-700 text-white font-bold px-12 py-6 rounded-xl text-xl hover:from-teal-700 hover:to-teal-800 hover:shadow-2xl transition-all duration-300 shadow-lg transform hover:scale-105 hover:-translate-y-1 w-full lg:w-auto justify-center"
+                  className="group inline-flex items-center bg-gradient-to-r from-teal-600 to-teal-700 text-white font-bold px-12 py-6 rounded-xl text-xl hover:from-teal-700 hover:to-teal-800 hover:shadow-2xl transition-all duration-300 shadow-lg transform hover:scale-105 hover:-translate-y-1 w-full lg:w-auto justify-center hover:shadow-teal-500/50"
                 >
                   Login as Admin
                   <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />

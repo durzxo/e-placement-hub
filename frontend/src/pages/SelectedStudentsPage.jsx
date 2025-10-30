@@ -28,7 +28,7 @@ const SelectedStudentsPage = () => {
       });
       setCompanyCounts(counts);
       setTotalCount(total);
-    } catch (err) {
+    } catch {
       setError('Failed to fetch data');
     }
     setLoading(false);
@@ -53,26 +53,27 @@ const SelectedStudentsPage = () => {
         packageValue
       });
       fetchData();
-    } catch (err) {
+    } catch {
       setError('Failed to update package');
     }
     setLoading(false);
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Final Selected Students & Packages</h2>
-      <div className="mb-4">
-        <span className="font-semibold">Total Selected Students: </span>
-        <span className="text-teal-700 font-bold">{totalCount}</span>
+    <div className="p-6 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+      <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-teal-600 to-teal-700 bg-clip-text text-transparent">Final Selected Students & Packages</h2>
+      <div className="mb-6 p-4 bg-white rounded-lg shadow-md border border-gray-200">
+        <span className="font-semibold text-gray-700">Total Selected Students: </span>
+        <span className="text-teal-700 font-bold text-xl">{totalCount}</span>
       </div>
       {Object.keys(companyCounts).length > 0 && (
-        <div className="mb-6">
-          <span className="font-semibold">Company-wise Selected Count:</span>
-          <ul className="list-disc ml-6">
+        <div className="mb-6 p-4 bg-white rounded-lg shadow-md border border-gray-200">
+          <span className="font-semibold text-gray-700 block mb-3">Company-wise Selected Count:</span>
+          <ul className="list-disc ml-6 space-y-1">
             {Object.entries(companyCounts).map(([company, count]) => (
               <li key={company}>
-                <span className="font-medium">{company}:</span> <span className="text-teal-700 font-bold">{count}</span>
+                <span className="font-medium text-gray-800">{company}:</span> <span className="text-teal-700 font-bold">{count}</span>
               </li>
             ))}
           </ul>
@@ -84,36 +85,37 @@ const SelectedStudentsPage = () => {
         <div>No selected students found.</div>
       ) : (
         Object.entries(data).map(([company, students]) => (
-          <div key={company} className="mb-8">
-            <h3 className="text-xl font-semibold mb-2">{company}</h3>
-            <table className="min-w-full border">
+          <div key={company} className="mb-8 bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
+            <h3 className="text-xl font-semibold mb-4 bg-teal-600 text-white px-4 py-3">{company}</h3>
+            <div className="overflow-x-auto">
+            <table className="min-w-full border-collapse">
               <thead>
-                <tr>
-                  <th className="border px-2 py-1">Name</th>
-                  <th className="border px-2 py-1">Superset ID</th>
-                  <th className="border px-2 py-1">Email</th>
-                  <th className="border px-2 py-1">Package (₹)</th>
-                  <th className="border px-2 py-1">Action</th>
+                <tr className="bg-gray-50">
+                  <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-700">Name</th>
+                  <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-700">Superset ID</th>
+                  <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-700">Email</th>
+                  <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-700">Package (₹)</th>
+                  <th className="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-700">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {students.map(student => (
-                  <tr key={student.studentId}>
-                    <td className="border px-2 py-1">{student.name}</td>
-                    <td className="border px-2 py-1">{student.rollNumber}</td>
-                    <td className="border px-2 py-1">{student.email}</td>
-                    <td className="border px-2 py-1">
+                  <tr key={student.studentId} className="hover:bg-teal-50 transition-colors duration-200">
+                    <td className="border border-gray-200 px-4 py-3">{student.name}</td>
+                    <td className="border border-gray-200 px-4 py-3">{student.rollNumber}</td>
+                    <td className="border border-gray-200 px-4 py-3 text-sm text-gray-600">{student.email}</td>
+                    <td className="border border-gray-200 px-4 py-3">
                       <input
                         type="number"
-                        className="border rounded px-2 py-1 w-24"
+                        className="border border-gray-300 rounded px-3 py-2 w-32 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                         value={editState[`${company}_${student.studentId}`] ?? student.package ?? ''}
                         onChange={e => handleEdit(company, student.studentId, e.target.value)}
                         placeholder="Enter package"
                       />
                     </td>
-                    <td className="border px-2 py-1">
+                    <td className="border border-gray-200 px-4 py-3">
                       <button
-                        className="bg-blue-500 text-white px-3 py-1 rounded"
+                        className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-all duration-200 font-semibold shadow-sm hover:shadow-md transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                         onClick={() => handleSave(company, student.studentId)}
                         disabled={loading}
                       >
@@ -124,9 +126,11 @@ const SelectedStudentsPage = () => {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         ))
       )}
+      </div>
     </div>
   );
 };

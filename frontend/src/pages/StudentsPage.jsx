@@ -73,14 +73,14 @@ const StudentsPage = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Manage Students</h1>
         <div className="flex items-center justify-between mb-6">
           <input
             type="text"
             placeholder="Search by name or Superset ID..."
-            className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all duration-200"
+            className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all duration-200 hover:border-teal-400"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -95,12 +95,12 @@ const StudentsPage = () => {
           {/* The button the user sees */}
           <button 
             onClick={handleUploadClick}
-            className="bg-teal-600 text-white py-2 px-4 rounded-lg shadow-sm font-semibold hover:bg-teal-700 hover:shadow-md transition-all duration-200 ml-4"
+            className="bg-teal-600 text-white py-2 px-4 rounded-lg shadow-sm font-semibold hover:bg-teal-700 hover:shadow-lg transition-all duration-200 ml-4 transform hover:scale-105"
           >
             Upload Master List
           </button>
         </div>
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300">
           {/* Your table JSX is perfect, no changes needed here */}
 
 <div className="bg-white rounded-xl shadow-md overflow-hidden">
@@ -119,14 +119,14 @@ const StudentsPage = () => {
     <tbody className="bg-white divide-y divide-gray-200">
       {filteredStudents.length > 0 ? (
         filteredStudents.map((student) => (
-          <tr key={student._id} className="hover:bg-gray-50 transition-colors duration-150"> {/* Use student._id from MongoDB */}
+          <tr key={student._id} className="hover:bg-teal-50 transition-all duration-200 hover:shadow-sm"> {/* Use student._id from MongoDB */}
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.rollNumber}</td>
             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{student.name}</td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.moodleID}</td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.cgpa}</td>
             <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
               <button 
-                className="text-teal-600 hover:text-teal-900 font-semibold transition-colors duration-150"
+                className="text-teal-600 hover:text-teal-900 font-semibold transition-all duration-200 hover:underline"
                 onClick={() => handleViewDetails(student)}
               >
                 View Details

@@ -167,7 +167,7 @@ const NoticesPage = () => {
 
   return (
     <motion.div 
-      className="p-6 bg-gray-50 min-h-screen"
+      className="p-6 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 min-h-screen"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -199,7 +199,7 @@ const NoticesPage = () => {
           <motion.div
             key={notice._id}
             variants={itemVariants}
-            className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-200 relative"
+            className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 relative transform hover:-translate-y-1"
             whileHover={{ scale: 1.02 }}
           >
             <div className="p-6">
@@ -261,7 +261,7 @@ const NoticesPage = () => {
         >
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 hover:shadow-md transition-all duration-200 font-semibold"
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 hover:shadow-lg transition-all duration-200 font-semibold transform hover:scale-105 hover:-translate-y-0.5"
           >
             + Add New Notice
           </button>

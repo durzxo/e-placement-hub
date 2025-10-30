@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import AddDriveModal from '../components/AddDriveModal';
 import { Briefcase, PlusCircle, Users, Trash2, AlertCircle } from 'lucide-react';
@@ -99,7 +100,7 @@ const DrivesListPage = () => {
 
     return (
         <motion.div 
-            className="p-4 sm:p-6 bg-gray-50 min-h-screen"
+            className="p-4 sm:p-6 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 min-h-screen"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -117,7 +118,7 @@ const DrivesListPage = () => {
                     </h1>
                     <motion.button 
                         onClick={() => setIsModalOpen(true)}
-                        className="bg-teal-600 text-white py-2 px-5 rounded-lg shadow-sm font-semibold hover:bg-teal-700 hover:shadow-md transition-all duration-200 inline-flex items-center"
+                        className="bg-teal-600 text-white py-2 px-5 rounded-lg shadow-sm font-semibold hover:bg-teal-700 hover:shadow-lg transition-all duration-200 inline-flex items-center"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
